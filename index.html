@@ -718,7 +718,7 @@
     const target = new Date(now.getFullYear(), 2, 19, 7, 10, 0);
     if (now > target) target.setFullYear(target.getFullYear() + 1);
     const diff = Math.ceil((target - now)/(1000*60*60*24));
-    document.getElementById("countdown-badge").textContent = diff > 0 ? `🐰 距離出發 ${diff} 天` : `🎉 今天出發！`;
+    document.getElementById("countdown-badge").textContent = diff > 0 ? `⛩️ 距離出發 ${diff} 天` : `🎉 今天出發！`;
   </script>
 </body>
 </html>
