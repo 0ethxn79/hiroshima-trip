@@ -353,7 +353,7 @@
           <div style="font-size:13px; font-weight:700; margin-bottom:4px;">👥 旅伴名單（請輸入各自名字，避免共用搞混）：</div>
           <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;" id="members-list-wrap"></div>
           <div class="add-row" style="margin-top:6px;">
-            <input type="text" id="new-member-input" class="add-input" placeholder="輸入名字（如：小宸、翔）" style="padding:5px 10px; font-size:13px;" />
+            <input type="text" id="new-member-input" class="add-input" placeholder="輸入名字" style="padding:5px 10px; font-size:13px;" />
             <button type="button" class="add-btn" id="add-member-btn" style="padding:5px 12px; font-size:13px;">＋ 旅伴</button>
           </div>
         </div>
@@ -600,7 +600,6 @@
       items: []
     };
 
-    // 若舊紀錄只有預設的 ["我"] 且無消費紀錄，自動清空改為由使用者輸入各自名字
     if (expenseData.members && expenseData.members.length === 1 && expenseData.members[0] === "我" && (!expenseData.items || expenseData.items.length === 0)) {
       expenseData.members = [];
     }
@@ -615,7 +614,6 @@
       statusBadge.style.background = bg;
     }
 
-    // 分頁切換邏輯
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const targetId = btn.dataset.target;
@@ -680,7 +678,6 @@
       }
     }
 
-    /* ================= 行程渲染 ================= */
     const dayTabsEl = document.getElementById("day-tabs");
     const timelineEl = document.getElementById("timeline-container");
     const areaBadgeEl = document.getElementById("day-area-badge");
@@ -791,7 +788,6 @@
       saveToGoogleSheet();
     });
 
-    /* ================= 記帳 & 匯率功能 ================= */
     const rateInput = document.getElementById("global-rate-input");
     const rateText = document.getElementById("rate-updated-text");
     rateInput.value = expenseData.rate || 0.2150;
@@ -1064,7 +1060,6 @@
     renderExpenses();
     loadFromGoogleSheet();
 
-    // 出發前任務
     const DEFAULT_PRE = [
       { text: "護照（確認效期 6 個月以上）", done: false },
       { text: "填寫 Visit Japan Web", done: false },
@@ -1097,7 +1092,6 @@
     });
     saveAndRenderPre();
 
-    // 行李清單
     const DEFAULT_LUG = [
       { cat: "隨身重要", text: "護照、錢包、日幣", done: false },
       { cat: "隨身重要", text: "行動電源", done: false },
@@ -1138,7 +1132,6 @@
     });
     saveAndRenderLug();
 
-    // 日語字卡
     const PHRASES = [
       { jp: "助けてください", furi: "たすけてください", zh: "請幫幫我" },
       { jp: "救急車を呼んでください", furi: "きゅうきゅうしゃをよんでください", zh: "請叫救護車" },
@@ -1161,7 +1154,6 @@
     }));
     document.getElementById("close-phrase-btn").addEventListener("click", () => phraseModal.classList.remove("open"));
 
-    // 倒數
     const now = new Date();
     const target = new Date(now.getFullYear(), 2, 19, 7, 10, 0);
     if (now > target) target.setFullYear(target.getFullYear() + 1);
