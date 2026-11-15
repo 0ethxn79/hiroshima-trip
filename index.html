@@ -39,7 +39,6 @@
 
     .app-container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
 
-    /* 固定於頂端的左右滑動導覽列 */
     .top-nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       background-color: var(--bg-washi); border-bottom: var(--border-w) solid var(--ink);
@@ -86,7 +85,6 @@
     .section-header { display: flex; align-items: center; justify-content: space-between; margin: 10px 0 12px; }
     .section-title { margin: 0; font-size: 21px; }
 
-    /* 分頁切換容器 */
     .tab-section { display: none; }
     .tab-section.active-section { display: block; }
 
@@ -152,7 +150,6 @@
       font-size: 14px; font-weight: 700; box-shadow: 0 3px 0 var(--ink); cursor: pointer; font-family: inherit;
     }
 
-    /* 天氣與美食卡片專屬樣式 */
     .weather-row {
       display: flex; align-items: center; justify-content: space-between;
       padding: 10px 6px; border-bottom: 1.5px dashed #E2D9C8; font-size: 14.5px;
@@ -178,7 +175,6 @@
       box-shadow: 0 2px 0 var(--ink);
     }
 
-    /* 記帳與匯率樣式 */
     .rate-box { background: var(--bg-washi); border: 2.5px solid var(--ink); border-radius: 18px; padding: 12px; margin-bottom: 14px; }
     .rate-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
     .rate-input { flex: 1; border: 2.5px solid var(--ink); border-radius: 12px; padding: 6px 10px; font-family: inherit; font-size: 15px; font-weight: 700; background: var(--white); width: 100%; }
@@ -208,7 +204,6 @@
     }
     .settle-card { background: #FFF9E6; border: 2px dashed var(--ink); border-radius: 14px; padding: 10px 12px; font-size: 13.5px; margin-top: 10px; }
 
-    /* 清單與進度條 */
     .progress-text { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; justify-content: space-between; }
     .progress-track { width: 100%; height: 14px; background: var(--bg-washi); border: 2.5px solid var(--ink); border-radius: 999px; overflow: hidden; margin-bottom: 14px; }
     .progress-fill { height: 100%; background: var(--wakatake); border-right: 2.5px solid var(--ink); width: 0%; transition: width 0.25s ease; }
@@ -249,7 +244,6 @@
 </head>
 <body>
 
-  <!-- 鎖定置頂的左右滑動導覽列 -->
   <nav class="top-nav" aria-label="主導覽列">
     <div class="top-nav-inner">
       <button type="button" class="nav-pill c-mizu tab-btn" data-target="sec-flight-box">✈️ 航班</button>
@@ -287,10 +281,10 @@
 
     <div class="countdown-row">
       <div class="countdown-pill" id="countdown-badge">⏳ 計算倒數中...</div>
-      <span class="sync-status" id="cloud-status">☁️ 準備同步</span>
+      <span class="sync-status" id="cloud-status">☁️ 本機已載入</span>
     </div>
 
-    <!-- ================= 1. 航班區塊 ================= -->
+    <!-- 1. 航班區塊 -->
     <div id="sec-flight-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">✈️ 飛行小日記</h2>
@@ -317,12 +311,12 @@
       </article>
     </div>
 
-    <!-- ================= 2. 行程區塊 (預設顯示) ================= -->
+    <!-- 2. 行程區塊 -->
     <div id="sec-schedule-box" class="tab-section active-section">
       <div class="section-header">
         <h2 class="section-title">📅 6 天的時間軸</h2>
         <div style="display:flex; gap:6px;">
-          <button type="button" class="btn-coral" id="refresh-cloud-btn" style="font-size:12px; padding:4px 10px; background:var(--mizu);">🔄 重新抓取雲端</button>
+          <button type="button" class="btn-coral" id="refresh-cloud-btn" style="font-size:12px; padding:4px 10px; background:var(--mizu);">🔄 同步雲端</button>
           <span class="ehon-badge" id="day-area-badge" style="background: var(--wakatake);">廣島・宮島</span>
         </div>
       </div>
@@ -340,7 +334,7 @@
       </div>
     </div>
 
-    <!-- ================= 3. 天氣預報區塊 (這週 + 下週 14 天) ================= -->
+    <!-- 3. 天氣預報區塊 -->
     <div id="sec-weather-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">🌤️ 這週＆下週天氣</h2>
@@ -370,7 +364,7 @@
       </article>
     </div>
 
-    <!-- ================= 4. 附近美食 & Tabelog 推薦區塊 ================= -->
+    <!-- 4. 附近美食 & Tabelog 推薦區塊 -->
     <div id="sec-food-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">🍜 附近高分美食</h2>
@@ -396,7 +390,7 @@
       <div id="food-list-container"></div>
     </div>
 
-    <!-- ================= 5. 記帳區塊 ================= -->
+    <!-- 5. 記帳區塊 -->
     <div id="sec-expense-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">💰 旅遊記帳 & 匯率</h2>
@@ -456,7 +450,7 @@
       </section>
     </div>
 
-    <!-- ================= 6. 住宿區塊 ================= -->
+    <!-- 6. 住宿區塊 -->
     <div id="sec-hotel-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">🏠 今晚住哪裡</h2>
@@ -483,7 +477,7 @@
       </article>
     </div>
 
-    <!-- ================= 7. 出發前任務 ================= -->
+    <!-- 7. 出發前任務 -->
     <div id="sec-pre-box" class="tab-section">
       <div class="section-header"><h2 class="section-title">✅ 出發前的小任務</h2></div>
       <section class="ehon-card" style="margin-bottom:0;">
@@ -497,7 +491,7 @@
       </section>
     </div>
 
-    <!-- ================= 8. 行李打包清單 ================= -->
+    <!-- 8. 行李打包清單 -->
     <div id="sec-luggage-box" class="tab-section">
       <div class="section-header"><h2 class="section-title">🧳 行李打包清單</h2></div>
       <section class="ehon-card" style="margin-bottom:0;">
@@ -518,7 +512,7 @@
       </section>
     </div>
 
-    <!-- ================= 9. 旅遊小幫手 ================= -->
+    <!-- 9. 旅遊小幫手 -->
     <div id="sec-helper-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">🆘 旅遊小幫手</h2>
@@ -622,6 +616,15 @@
   <script>
     const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyI4clVAxGhFyR4ar-IzHcJ4UaQsalZIM98AwkSdQE1VPfyGMMABoD39Jk42n91mjELTQ/exec";
 
+    // 1. 立即計算並顯示出發倒數（絕不等待網路）
+    (function updateCountdown() {
+      const now = new Date();
+      const target = new Date(now.getFullYear(), 2, 19, 7, 10, 0);
+      if (now > target) target.setFullYear(target.getFullYear() + 1);
+      const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+      document.getElementById("countdown-badge").textContent = diff > 0 ? ("⛩️ 距離出發 " + diff + " 天") : "🎉 今天出發！";
+    })();
+
     const DEFAULT_TRIP_DAYS = [
       {
         day: "Day 1", date: "3/19 (五)", area: "廣島・宮島",
@@ -692,9 +695,17 @@
     let showExpenseList = true;
     const statusBadge = document.getElementById("cloud-status");
 
-    function setCloudStatus(text, bg = "var(--wakatake)") {
+    function setCloudStatus(text, bg) {
       statusBadge.textContent = text;
-      statusBadge.style.background = bg;
+      statusBadge.style.background = bg || "var(--wakatake)";
+    }
+
+    // 帶超時保護的 fetch，避免手機行動網路卡死
+    function fetchWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs || 5000);
+      const opts = Object.assign({}, options, { signal: controller.signal });
+      return fetch(url, opts).finally(() => clearTimeout(id));
     }
 
     document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -717,7 +728,7 @@
       });
     });
 
-    /* ================= 天氣預報功能 (Open-Meteo 14天這週+下週) ================= */
+    /* ================= 天氣預報功能 ================= */
     let weatherLoadedOnce = false;
 
     function getWeatherEmoji(code) {
@@ -735,12 +746,12 @@
       document.getElementById("weather-city-label").textContent = labelName;
       const thisWeekEl = document.getElementById("weather-this-week");
       const nextWeekEl = document.getElementById("weather-next-week");
-      thisWeekEl.innerHTML = `<p style="text-align:center; opacity:0.6;">⏳ 正在更新 ${labelName} 這週天氣...</p>`;
-      nextWeekEl.innerHTML = `<p style="text-align:center; opacity:0.6;">⏳ 正在更新 ${labelName} 下週天氣...</p>`;
+      thisWeekEl.innerHTML = '<p style="text-align:center; opacity:0.6;">⏳ 正在更新 ' + labelName + ' 這週天氣...</p>';
+      nextWeekEl.innerHTML = '<p style="text-align:center; opacity:0.6;">⏳ 正在更新 ' + labelName + ' 下週天氣...</p>';
 
       try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=14`;
-        const res = await fetch(url);
+        const url = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=14";
+        const res = await fetchWithTimeout(url, {}, 6000);
         const data = await res.json();
         const d = data.daily;
         const weekDays = ["日", "一", "二", "三", "四", "五", "六"];
@@ -749,19 +760,17 @@
           let html = "";
           for (let i = startIdx; i < endIdx && i < d.time.length; i++) {
             const dt = new Date(d.time[i] + "T00:00:00");
-            const dateLabel = `${dt.getMonth() + 1}/${dt.getDate()} (${weekDays[dt.getDay()]})`;
+            const dateLabel = (dt.getMonth() + 1) + "/" + dt.getDate() + " (" + weekDays[dt.getDay()] + ")";
             const iconText = getWeatherEmoji(d.weathercode[i]);
             const tMin = Math.round(d.temperature_2m_min[i]);
             const tMax = Math.round(d.temperature_2m_max[i]);
-            const pop = d.precipitation_probability_max[i] ?? 0;
-            html += `
-              <div class="weather-row">
-                <div style="min-width:85px; font-weight:700;">${dateLabel}</div>
-                <div style="flex:1;">${iconText}</div>
-                <div class="weather-temp" style="margin-right:8px;">${tMin}° ~ ${tMax}°C</div>
-                <span class="weather-rain">☔ ${pop}%</span>
-              </div>
-            `;
+            const pop = d.precipitation_probability_max[i] !== null ? d.precipitation_probability_max[i] : 0;
+            html += '<div class="weather-row">' +
+              '<div style="min-width:85px; font-weight:700;">' + dateLabel + '</div>' +
+              '<div style="flex:1;">' + iconText + '</div>' +
+              '<div class="weather-temp" style="margin-right:8px;">' + tMin + '° ~ ' + tMax + '°C</div>' +
+              '<span class="weather-rain">☔ ' + pop + '%</span>' +
+              '</div>';
           }
           return html;
         };
@@ -769,7 +778,7 @@
         thisWeekEl.innerHTML = renderRows(0, 7);
         nextWeekEl.innerHTML = renderRows(7, 14);
       } catch (e) {
-        thisWeekEl.innerHTML = `<p style="text-align:center; color:#D9534F;">⚠️ 天氣資料載入失敗，請檢查網路後重試</p>`;
+        thisWeekEl.innerHTML = '<p style="text-align:center; color:#D9534F;">⚠️ 天氣資料載入逾時，請稍後再試</p>';
         nextWeekEl.innerHTML = "";
       }
     }
@@ -783,7 +792,7 @@
             alert("你的瀏覽器不支援 GPS 定位");
             return;
           }
-          document.getElementById("weather-this-week").innerHTML = `<p style="text-align:center;">📡 正在取得你的 GPS 位置...</p>`;
+          document.getElementById("weather-this-week").innerHTML = '<p style="text-align:center;">📡 正在取得你的 GPS 位置...</p>';
           navigator.geolocation.getCurrentPosition(
             pos => fetchWeatherForecast(pos.coords.latitude, pos.coords.longitude, "我的目前位置"),
             () => alert("無法取得定位權限，請確認手機已允許瀏覽器使用位置資訊！")
@@ -802,7 +811,7 @@
       const toRad = x => x * Math.PI / 180;
       const dLat = toRad(lat2 - lat1);
       const dLon = toRad(lon2 - lon1);
-      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+      const a = Math.pow(Math.sin(dLat / 2), 2) + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.pow(Math.sin(dLon / 2), 2);
       return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
     }
 
@@ -829,17 +838,17 @@
       const listEl = document.getElementById("food-list-container");
       const topLink = document.getElementById("tabelog-top-ranking-link");
 
-      statusEl.textContent = `⏳ 正在搜尋「${areaLabel}」周邊 1 公里內美食...`;
-      listEl.innerHTML = `<div class="ehon-card" style="text-align:center;">📡 搜尋附近餐廳與小吃中，請稍候...</div>`;
-      topLink.href = `https://tabelog.com/rstLst/?vs=1&sa=${encodeURIComponent(areaLabel)}&sk=&SrtT=rt&Srt=D`;
+      statusEl.textContent = "⏳ 正在搜尋「" + areaLabel + "」周邊美食...";
+      listEl.innerHTML = '<div class="ehon-card" style="text-align:center;">📡 搜尋附近餐廳與小吃中...</div>';
+      topLink.href = "https://tabelog.com/rstLst/?vs=1&sa=" + encodeURIComponent(areaLabel) + "&sk=&SrtT=rt&Srt=D";
 
-      const query = `[out:json][timeout:15];(node["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,${lat},${lon});way["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,${lat},${lon}););out center 40;`;
+      const query = '[out:json][timeout:10];(node["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,' + lat + ',' + lon + ');way["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,' + lat + ',' + lon + '););out center 35;';
 
       try {
-        const res = await fetch("https://overpass-api.de/api/interpreter", {
+        const res = await fetchWithTimeout("https://overpass-api.de/api/interpreter", {
           method: "POST",
           body: "data=" + encodeURIComponent(query)
-        });
+        }, 8000);
         const data = await res.json();
         const places = (data.elements || [])
           .filter(el => el.tags && (el.tags.name || el.tags["name:ja"] || el.tags["name:zh"]))
@@ -857,34 +866,26 @@
           .slice(0, 15);
 
         if (places.length === 0) {
-          statusEl.textContent = `⚠️ 「${areaLabel}」附近暫無資料，請點右側看 Tabelog 排行`;
+          statusEl.textContent = "⚠️ 「" + areaLabel + "」附近暫無資料，請點右側看 Tabelog 排行";
           listEl.innerHTML = "";
           return;
         }
 
-        statusEl.textContent = `✅ 已為你找到 ${places.length} 家「${areaLabel}」附近餐廳/小吃`;
+        statusEl.textContent = "✅ 已找到 " + places.length + " 家「" + areaLabel + "」附近美食";
         listEl.innerHTML = places.map((p, idx) => {
-          const tabelogSearchUrl = `https://tabelog.com/rstLst/?vs=1&sa=${encodeURIComponent(areaLabel)}&sk=${encodeURIComponent(p.jpName)}&SrtT=rt&Srt=D`;
-          const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.jpName)}&query_place_id=&center=${p.pLat},${p.pLon}`;
-          return `
-            <div class="food-card">
-              <div class="food-title">
-                <span>${idx + 1}. ${p.name}</span>
-                <span class="ehon-badge" style="background:var(--mizu); font-size:11.5px;">📏 ${p.dist}m</span>
-              </div>
-              <div class="food-meta">
-                <span>${p.cat}</span>
-                ${p.hours ? ` ｜ 🕒 ${p.hours}` : ""}
-              </div>
-              <div class="food-actions">
-                <a href="${tabelogSearchUrl}" target="_blank" rel="noopener" class="tabelog-btn">🏆 查 Tabelog 評價 ↗</a>
-                <a href="${mapUrl}" target="_blank" rel="noopener" class="nav-map-btn">🧭 Google 導航</a>
-              </div>
-            </div>
-          `;
+          const tabelogSearchUrl = "https://tabelog.com/rstLst/?vs=1&sa=" + encodeURIComponent(areaLabel) + "&sk=" + encodeURIComponent(p.jpName) + "&SrtT=rt&Srt=D";
+          const mapUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.jpName) + "&center=" + p.pLat + "," + p.pLon;
+          return '<div class="food-card">' +
+            '<div class="food-title"><span>' + (idx + 1) + '. ' + p.name + '</span><span class="ehon-badge" style="background:var(--mizu); font-size:11.5px;">📏 ' + p.dist + 'm</span></div>' +
+            '<div class="food-meta"><span>' + p.cat + '</span>' + (p.hours ? ' ｜ 🕒 ' + p.hours : '') + '</div>' +
+            '<div class="food-actions">' +
+              '<a href="' + tabelogSearchUrl + '" target="_blank" rel="noopener" class="tabelog-btn">🏆 查 Tabelog 評價 ↗</a>' +
+              '<a href="' + mapUrl + '" target="_blank" rel="noopener" class="nav-map-btn">🧭 Google 導航</a>' +
+            '</div>' +
+          '</div>';
         }).join("");
       } catch (err) {
-        statusEl.textContent = `⚠️ 網路繁忙，可直接點右側開啟 Tabelog 高分榜`;
+        statusEl.textContent = "⚠️ 地圖伺服器忙碌中，可直接點右側開啟 Tabelog 高分榜";
         listEl.innerHTML = "";
       }
     }
@@ -910,12 +911,12 @@
     /* ================= 雲端同步與行程 ================= */
     async function loadFromGoogleSheet() {
       if (!GOOGLE_SHEET_API_URL.startsWith("http")) {
-        setCloudStatus("⚠️ 尚未填入雲端網址", "var(--yamabuki)");
+        setCloudStatus("⚠️ 離線本機模式", "var(--yamabuki)");
         return;
       }
-      setCloudStatus("☁️ 讀取雲端中...", "var(--mizu)");
+      setCloudStatus("☁️ 同步中...", "var(--mizu)");
       try {
-        const res = await fetch(GOOGLE_SHEET_API_URL);
+        const res = await fetchWithTimeout(GOOGLE_SHEET_API_URL, {}, 5000);
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           tripDays = data;
@@ -931,8 +932,6 @@
             localStorage.setItem("hiroshima_expenses_v1", JSON.stringify(expenseData));
           }
           localStorage.setItem("hiroshima_trip_days_v4", JSON.stringify(tripDays));
-        } else {
-          await saveToGoogleSheet();
         }
         renderDayTabs();
         renderTimeline();
@@ -940,7 +939,7 @@
         renderExpenses();
         setCloudStatus("☁️ 已與試算表同步", "var(--wakatake)");
       } catch (err) {
-        setCloudStatus("⚠️ 離線模式", "var(--coral)");
+        setCloudStatus("📱 本機離線模式", "var(--yamabuki)");
       }
     }
 
@@ -951,10 +950,10 @@
       setCloudStatus("☁️ 儲存同步中...", "var(--yamabuki)");
       try {
         const payload = { tripDays, expenseData };
-        await fetch(GOOGLE_SHEET_API_URL, { method: "POST", body: JSON.stringify(payload) });
+        await fetchWithTimeout(GOOGLE_SHEET_API_URL, { method: "POST", body: JSON.stringify(payload) }, 6000);
         setCloudStatus("☁️ 已同步至試算表", "var(--wakatake)");
       } catch (err) {
-        setCloudStatus("⚠️ 同步失敗", "var(--coral)");
+        setCloudStatus("⚠️ 已存手機(網路不穩)", "var(--coral)");
       }
     }
 
@@ -963,12 +962,12 @@
     const areaBadgeEl = document.getElementById("day-area-badge");
 
     function renderDayTabs() {
-      dayTabsEl.innerHTML = tripDays.map((d, idx) => `
-        <button type="button" class="day-tab ${idx === activeDayIdx ? "active" : ""}" data-idx="${idx}">
-          <span class="day-tab-num">${d.day}</span>
-          <span class="day-tab-date">${d.date}</span>
-        </button>
-      `).join("");
+      dayTabsEl.innerHTML = tripDays.map((d, idx) =>
+        '<button type="button" class="day-tab ' + (idx === activeDayIdx ? "active" : "") + '" data-idx="' + idx + '">' +
+          '<span class="day-tab-num">' + d.day + '</span>' +
+          '<span class="day-tab-date">' + d.date + '</span>' +
+        '</button>'
+      ).join("");
       dayTabsEl.querySelectorAll(".day-tab").forEach(btn => {
         btn.addEventListener("click", () => {
           activeDayIdx = Number(btn.dataset.idx);
@@ -981,29 +980,29 @@
     function renderTimeline() {
       const current = tripDays[activeDayIdx];
       areaBadgeEl.textContent = current.area;
-      timelineEl.innerHTML = current.items.map((item, idx) => `
-        <article class="ehon-card timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="spot-header">
-            <div>
-              <div class="spot-time">${item.time}</div>
-              <h3 class="spot-title">${item.title}</h3>
-            </div>
-            <div style="display:flex; align-items:center; gap:6px;">
-              ${item.must ? `<span class="must-go-badge">★ 必去</span>` : ""}
-              <div class="card-actions">
-                <button type="button" class="action-btn edit-spot" data-sidx="${idx}">✏️</button>
-                <button type="button" class="action-btn del del-spot" data-sidx="${idx}">🗑️</button>
-              </div>
-            </div>
-          </div>
-          <p class="spot-note">${item.note}</p>
-          <div class="spot-tags">
-            <span class="transport-tag ${item.tType}">${item.transport}</span>
-            <a class="nav-map-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.query)}" target="_blank" rel="noopener">🧭 導航</a>
-          </div>
-        </article>
-      `).join("");
+      timelineEl.innerHTML = current.items.map((item, idx) =>
+        '<article class="ehon-card timeline-item">' +
+          '<span class="timeline-dot"></span>' +
+          '<div class="spot-header">' +
+            '<div>' +
+              '<div class="spot-time">' + item.time + '</div>' +
+              '<h3 class="spot-title">' + item.title + '</h3>' +
+            '</div>' +
+            '<div style="display:flex; align-items:center; gap:6px;">' +
+              (item.must ? '<span class="must-go-badge">★ 必去</span>' : '') +
+              '<div class="card-actions">' +
+                '<button type="button" class="action-btn edit-spot" data-sidx="' + idx + '">✏️</button>' +
+                '<button type="button" class="action-btn del del-spot" data-sidx="' + idx + '">🗑️</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<p class="spot-note">' + item.note + '</p>' +
+          '<div class="spot-tags">' +
+            '<span class="transport-tag ' + item.tType + '">' + item.transport + '</span>' +
+            '<a class="nav-map-btn" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.query) + '" target="_blank" rel="noopener">🧭 導航</a>' +
+          '</div>' +
+        '</article>'
+      ).join("");
 
       timelineEl.querySelectorAll(".edit-spot").forEach(btn => {
         btn.addEventListener("click", () => openSpotModal(Number(btn.dataset.sidx)));
@@ -1020,11 +1019,11 @@
     }
 
     const spotModal = document.getElementById("spot-modal");
-    function openSpotModal(sidx = null) {
-      editingSpotIdx = sidx;
-      document.getElementById("modal-title").textContent = sidx === null ? "新增行程景點" : "編輯行程景點";
-      if (sidx !== null) {
-        const item = tripDays[activeDayIdx].items[sidx];
+    function openSpotModal(sidx) {
+      editingSpotIdx = (sidx !== undefined && sidx !== null) ? sidx : null;
+      document.getElementById("modal-title").textContent = editingSpotIdx === null ? "新增行程景點" : "編輯行程景點";
+      if (editingSpotIdx !== null) {
+        const item = tripDays[activeDayIdx].items[editingSpotIdx];
         document.getElementById("m-time").value = item.time;
         document.getElementById("m-title").value = item.title;
         document.getElementById("m-note").value = item.note;
@@ -1076,14 +1075,14 @@
     async function fetchLiveExchangeRate() {
       rateText.textContent = "⏳ 正在抓取最新日圓匯率...";
       try {
-        const res = await fetch("https://open.er-api.com/v6/latest/JPY");
+        const res = await fetchWithTimeout("https://open.er-api.com/v6/latest/JPY", {}, 5000);
         const json = await res.json();
         if (json && json.rates && json.rates.TWD) {
           const liveRate = Number(json.rates.TWD.toFixed(6));
           rateInput.value = liveRate;
           expenseData.rate = liveRate;
           const nowStr = new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" });
-          rateText.textContent = `✅ 已更新即時匯率：1 JPY = ${liveRate} TWD (${nowStr})`;
+          rateText.textContent = "✅ 已更新即時匯率：1 JPY = " + liveRate + " TWD (" + nowStr + ")";
           saveToGoogleSheet();
           renderExpenses();
         }
@@ -1116,21 +1115,21 @@
     document.getElementById("quick-calc-jpy").addEventListener("input", (e) => {
       const jpy = evalMathExpr(e.target.value);
       const rate = parseFloat(rateInput.value) || 0.215;
-      document.getElementById("quick-calc-twd").textContent = `≈ NT$ ${Math.round(jpy * rate).toLocaleString()}`;
+      document.getElementById("quick-calc-twd").textContent = "≈ NT$ " + Math.round(jpy * rate).toLocaleString();
     });
 
     function renderMembers() {
       const wrap = document.getElementById("members-list-wrap");
       if (!expenseData.members || expenseData.members.length === 0) {
-        wrap.innerHTML = `<span style="font-size:12.5px; opacity:0.65;">尚未新增旅伴，請在下方輸入每位旅伴的名字</span>`;
+        wrap.innerHTML = '<span style="font-size:12.5px; opacity:0.65;">尚未新增旅伴，請在下方輸入每位旅伴的名字</span>';
         return;
       }
-      wrap.innerHTML = expenseData.members.map((m, idx) => `
-        <span class="ehon-badge" style="background:var(--bg-washi);">
-          👤 ${m}
-          <button type="button" data-midx="${idx}" class="del-member-btn" style="border:none;background:none;cursor:pointer;font-weight:700;margin-left:4px;">✕</button>
-        </span>
-      `).join("");
+      wrap.innerHTML = expenseData.members.map((m, idx) =>
+        '<span class="ehon-badge" style="background:var(--bg-washi);">' +
+          '👤 ' + m +
+          '<button type="button" data-midx="' + idx + '" class="del-member-btn" style="border:none;background:none;cursor:pointer;font-weight:700;margin-left:4px;">✕</button>' +
+        '</span>'
+      ).join("");
       wrap.querySelectorAll(".del-member-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           expenseData.members.splice(Number(btn.dataset.midx), 1);
@@ -1164,7 +1163,7 @@
       const rate = parseFloat(rateInput.value) || 0.215;
       const twd = selCurrency === "JPY" ? Math.round(amt * rate) : Math.round(amt);
       const jpy = selCurrency === "JPY" ? Math.round(amt) : Math.round(amt / rate);
-      document.getElementById("exp-calc-preview").textContent = `換算：¥ ${jpy.toLocaleString()} 日圓 ／ NT$ ${twd.toLocaleString()} 台幣`;
+      document.getElementById("exp-calc-preview").textContent = "換算：¥ " + jpy.toLocaleString() + " 日圓 ／ NT$ " + twd.toLocaleString() + " 台幣";
     }
 
     document.getElementById("exp-amount").addEventListener("input", updateExpPreview);
@@ -1191,22 +1190,21 @@
       const splitGroup = document.getElementById("exp-split-group");
       if (!expenseData.members.includes(selPayer)) selPayer = expenseData.members[0] || "";
 
-      payerGroup.innerHTML = expenseData.members.map(m => `
-        <button type="button" class="choice-pill ${m === selPayer ? "active-coral" : ""}" data-p="${m}">${m}</button>
-      `).join("");
+      payerGroup.innerHTML = expenseData.members.map(m =>
+        '<button type="button" class="choice-pill ' + (m === selPayer ? "active-coral" : "") + '" data-p="' + m + '">' + m + '</button>'
+      ).join("");
       payerGroup.querySelectorAll(".choice-pill").forEach(b => b.addEventListener("click", () => {
         selPayer = b.dataset.p;
         renderExpModalPeople();
       }));
 
-      splitGroup.innerHTML = `
-        <button type="button" class="choice-pill ${selSplitMembers.length === expenseData.members.length ? "active-waka" : ""}" id="split-all-btn">全選</button>
-        ${expenseData.members.map(m => `
-          <button type="button" class="choice-pill ${selSplitMembers.includes(m) ? "active-waka" : ""}" data-s="${m}">${m}</button>
-        `).join("")}
-      `;
+      splitGroup.innerHTML =
+        '<button type="button" class="choice-pill ' + (selSplitMembers.length === expenseData.members.length ? "active-waka" : "") + '" id="split-all-btn">全選</button>' +
+        expenseData.members.map(m =>
+          '<button type="button" class="choice-pill ' + (selSplitMembers.includes(m) ? "active-waka" : "") + '" data-s="' + m + '">' + m + '</button>'
+        ).join("");
       document.getElementById("split-all-btn").addEventListener("click", () => {
-        selSplitMembers = [...expenseData.members];
+        selSplitMembers = expenseData.members.slice();
         renderExpModalPeople();
       });
       splitGroup.querySelectorAll("[data-s]").forEach(b => b.addEventListener("click", () => {
@@ -1229,7 +1227,7 @@
       document.getElementById("exp-amount").value = "";
       document.getElementById("exp-note").value = "";
       selPayer = expenseData.members[0];
-      selSplitMembers = [...expenseData.members];
+      selSplitMembers = expenseData.members.slice();
       renderExpModalPeople();
       updateExpPreview();
       expModal.classList.add("open");
@@ -1250,13 +1248,13 @@
         id: Date.now(),
         date: dateStr,
         category: selCategory,
-        note,
+        note: note,
         currency: selCurrency,
         origAmount: amt,
-        jpy,
-        twd,
+        jpy: jpy,
+        twd: twd,
         payer: selPayer,
-        splitFor: [...selSplitMembers]
+        splitFor: selSplitMembers.slice()
       });
 
       expModal.classList.remove("open");
@@ -1284,30 +1282,30 @@
         item.splitFor.forEach(m => { if (owedMap[m] !== undefined) owedMap[m] += share; });
       });
 
-      document.getElementById("total-jpy-display").textContent = `¥ ${totalJpy.toLocaleString()}`;
-      document.getElementById("total-twd-display").textContent = `NT$ ${totalTwd.toLocaleString()}`;
+      document.getElementById("total-jpy-display").textContent = "¥ " + totalJpy.toLocaleString();
+      document.getElementById("total-twd-display").textContent = "NT$ " + totalTwd.toLocaleString();
 
       const listEl = document.getElementById("expense-list-container");
       if (!showExpenseList) {
-        listEl.innerHTML = `<p style="text-align:center; opacity:0.5; font-size:13px; margin:6px 0;">(明細已收合)</p>`;
+        listEl.innerHTML = '<p style="text-align:center; opacity:0.5; font-size:13px; margin:6px 0;">(明細已收合)</p>';
       } else if (expenseData.items.length === 0) {
-        listEl.innerHTML = `<p style="text-align:center; opacity:0.6; font-size:13.5px; margin:10px 0;">還沒有記帳紀錄，點上方按鈕開始記帳吧！</p>`;
+        listEl.innerHTML = '<p style="text-align:center; opacity:0.6; font-size:13.5px; margin:10px 0;">還沒有記帳紀錄，點上方按鈕開始記帳吧！</p>';
       } else {
-        listEl.innerHTML = expenseData.items.map((item, idx) => `
-          <div class="expense-item">
-            <div>
-              <div><span class="exp-cat-badge">${item.category}</span><strong>${item.note}</strong> <small style="opacity:0.6;">(${item.date})</small></div>
-              <div style="font-size:12px; opacity:0.75; margin-top:2px;">👤 ${item.payer} 先付 ｜ 分攤：${item.splitFor.join("、")}</div>
-            </div>
-            <div style="text-align:right; display:flex; align-items:center; gap:8px;">
-              <div>
-                <div style="font-weight:700; font-size:15px;">¥ ${item.jpy.toLocaleString()}</div>
-                <div style="font-size:12px; opacity:0.75;">≈ NT$ ${item.twd.toLocaleString()}</div>
-              </div>
-              <button type="button" class="del-btn del-exp-btn" data-eidx="${idx}">✕</button>
-            </div>
-          </div>
-        `).join("");
+        listEl.innerHTML = expenseData.items.map((item, idx) =>
+          '<div class="expense-item">' +
+            '<div>' +
+              '<div><span class="exp-cat-badge">' + item.category + '</span><strong>' + item.note + '</strong> <small style="opacity:0.6;">(' + item.date + ')</small></div>' +
+              '<div style="font-size:12px; opacity:0.75; margin-top:2px;">👤 ' + item.payer + ' 先付 ｜ 分攤：' + item.splitFor.join("、") + '</div>' +
+            '</div>' +
+            '<div style="text-align:right; display:flex; align-items:center; gap:8px;">' +
+              '<div>' +
+                '<div style="font-weight:700; font-size:15px;">¥ ' + item.jpy.toLocaleString() + '</div>' +
+                '<div style="font-size:12px; opacity:0.75;">≈ NT$ ' + item.twd.toLocaleString() + '</div>' +
+              '</div>' +
+              '<button type="button" class="del-btn del-exp-btn" data-eidx="' + idx + '">✕</button>' +
+            '</div>' +
+          '</div>'
+        ).join("");
 
         listEl.querySelectorAll(".del-exp-btn").forEach(btn => {
           btn.addEventListener("click", () => {
@@ -1325,56 +1323,57 @@
         settleEl.style.display = "block";
         const lines = expenseData.members.map(m => {
           const diff = Math.round(paidMap[m] - owedMap[m]);
-          if (diff > 0) return `• <strong>${m}</strong> 應收回 <span style="color:#2B7A78; font-weight:700;">NT$ ${diff.toLocaleString()}</span>`;
-          if (diff < 0) return `• <strong>${m}</strong> 應支付 <span style="color:#D9534F; font-weight:700;">NT$ ${Math.abs(diff).toLocaleString()}</span>`;
-          return `• <strong>${m}</strong> 已結清 (NT$ 0)`;
+          if (diff > 0) return '• <strong>' + m + '</strong> 應收回 <span style="color:#2B7A78; font-weight:700;">NT$ ' + diff.toLocaleString() + '</span>';
+          if (diff < 0) return '• <strong>' + m + '</strong> 應支付 <span style="color:#D9534F; font-weight:700;">NT$ ' + Math.abs(diff).toLocaleString() + '</span>';
+          return '• <strong>' + m + '</strong> 已結清 (NT$ 0)';
         });
-        settleEl.innerHTML = `<div style="font-weight:700; margin-bottom:4px;">📊 旅伴分攤結算（台幣計）：</div>` + lines.join("<br>");
+        settleEl.innerHTML = '<div style="font-weight:700; margin-bottom:4px;">📊 旅伴分攤結算（台幣計）：</div>' + lines.join("<br>");
       } else {
         settleEl.style.display = "none";
       }
     }
 
+    // 2. 先秒開渲染所有本機資料，再非同步背景連線試算表
     renderDayTabs();
     renderTimeline();
     renderMembers();
     renderExpenses();
-    loadFromGoogleSheet();
+    setTimeout(loadFromGoogleSheet, 100);
 
+    // 出發前任務
     const DEFAULT_PRE = [
       { text: "護照（確認效期 6 個月以上）", done: false },
       { text: "填寫 Visit Japan Web", done: false },
       { text: "日本上網卡 / eSIM 開通設定", done: false },
       { text: "日幣現鈔與海外信用卡", done: false },
       { text: "電子機票與飯店確認信存入手機", done: false }
-      { text: "機場接送 去程", done: false }
-      { text: "機場接送 返程", done: false }
     ];
     let preItems = JSON.parse(localStorage.getItem("hiroshima_pre_v4")) || DEFAULT_PRE;
     function saveAndRenderPre() {
       localStorage.setItem("hiroshima_pre_v4", JSON.stringify(preItems));
       const done = preItems.filter(i => i.done).length;
-      document.getElementById("pre-progress-label").textContent = `已完成 ${done} / ${preItems.length} 項`;
-      document.getElementById("pre-progress-bar").style.width = preItems.length ? `${(done/preItems.length)*100}%` : "0%";
-      document.getElementById("pre-list").innerHTML = preItems.map((i, idx) => `
-        <li class="check-item ${i.done ? "done" : ""}">
-          <label class="check-label">
-            <input type="checkbox" ${i.done ? "checked" : ""} data-idx="${idx}" style="display:none;" />
-            <span class="check-box">${i.done ? "✔" : ""}</span>
-            <span class="check-text">${i.text}</span>
-          </label>
-          <button type="button" class="del-btn" data-del="${idx}">✕</button>
-        </li>
-      `).join("");
+      document.getElementById("pre-progress-label").textContent = "已完成 " + done + " / " + preItems.length + " 項";
+      document.getElementById("pre-progress-bar").style.width = preItems.length ? ((done / preItems.length) * 100) + "%" : "0%";
+      document.getElementById("pre-list").innerHTML = preItems.map((i, idx) =>
+        '<li class="check-item ' + (i.done ? "done" : "") + '">' +
+          '<label class="check-label">' +
+            '<input type="checkbox" ' + (i.done ? "checked" : "") + ' data-idx="' + idx + '" style="display:none;" />' +
+            '<span class="check-box">' + (i.done ? "✔" : "") + '</span>' +
+            '<span class="check-text">' + i.text + '</span>' +
+          '</label>' +
+          '<button type="button" class="del-btn" data-del="' + idx + '">✕</button>' +
+        '</li>'
+      ).join("");
       document.querySelectorAll("#pre-list input").forEach(cb => cb.addEventListener("change", () => { preItems[cb.dataset.idx].done = cb.checked; saveAndRenderPre(); }));
       document.querySelectorAll("#pre-list .del-btn").forEach(btn => btn.addEventListener("click", () => { preItems.splice(btn.dataset.del, 1); saveAndRenderPre(); }));
     }
     document.getElementById("pre-add-btn").addEventListener("click", () => {
       const inp = document.getElementById("pre-input");
-      if (inp.value.trim()) { preItems.push({ text: inp.value.trim(), done: false }); inp.value=""; saveAndRenderPre(); }
+      if (inp.value.trim()) { preItems.push({ text: inp.value.trim(), done: false }); inp.value = ""; saveAndRenderPre(); }
     });
     saveAndRenderPre();
 
+    // 行李清單
     const DEFAULT_LUG = [
       { cat: "隨身重要", text: "護照、錢包、日幣", done: false },
       { cat: "隨身重要", text: "行動電源", done: false },
@@ -1386,20 +1385,20 @@
     function saveAndRenderLug() {
       localStorage.setItem("hiroshima_lug_v4", JSON.stringify(lugItems));
       const done = lugItems.filter(i => i.done).length;
-      document.getElementById("lug-progress-label").textContent = `已完成 ${done} / ${lugItems.length} 項`;
-      document.getElementById("lug-progress-bar").style.width = lugItems.length ? `${(done/lugItems.length)*100}%` : "0%";
-      document.getElementById("lug-list").innerHTML = lugItems.map((i, realIdx) => ({...i, realIdx}))
+      document.getElementById("lug-progress-label").textContent = "已完成 " + done + " / " + lugItems.length + " 項";
+      document.getElementById("lug-progress-bar").style.width = lugItems.length ? ((done / lugItems.length) * 100) + "%" : "0%";
+      document.getElementById("lug-list").innerHTML = lugItems.map((i, realIdx) => Object.assign({}, i, { realIdx: realIdx }))
         .filter(i => curCat === "all" || i.cat === curCat)
-        .map(i => `
-          <li class="check-item ${i.done ? "done" : ""}">
-            <label class="check-label">
-              <input type="checkbox" ${i.done ? "checked" : ""} data-idx="${i.realIdx}" style="display:none;" />
-              <span class="check-box">${i.done ? "✔" : ""}</span>
-              <span class="check-text"><small style="opacity:0.6;">[${i.cat}]</small> ${i.text}</span>
-            </label>
-            <button type="button" class="del-btn" data-del="${i.realIdx}">✕</button>
-          </li>
-        `).join("");
+        .map(i =>
+          '<li class="check-item ' + (i.done ? "done" : "") + '">' +
+            '<label class="check-label">' +
+              '<input type="checkbox" ' + (i.done ? "checked" : "") + ' data-idx="' + i.realIdx + '" style="display:none;" />' +
+              '<span class="check-box">' + (i.done ? "✔" : "") + '</span>' +
+              '<span class="check-text"><small style="opacity:0.6;">[' + i.cat + ']</small> ' + i.text + '</span>' +
+            '</label>' +
+            '<button type="button" class="del-btn" data-del="' + i.realIdx + '">✕</button>' +
+          '</li>'
+        ).join("");
       document.querySelectorAll("#lug-list input").forEach(cb => cb.addEventListener("change", () => { lugItems[cb.dataset.idx].done = cb.checked; saveAndRenderLug(); }));
       document.querySelectorAll("#lug-list .del-btn").forEach(btn => btn.addEventListener("click", () => { lugItems.splice(btn.dataset.del, 1); saveAndRenderLug(); }));
     }
@@ -1411,10 +1410,11 @@
     }));
     document.getElementById("lug-add-btn").addEventListener("click", () => {
       const inp = document.getElementById("lug-input");
-      if (inp.value.trim()) { lugItems.push({ cat: curCat === "all" ? "隨身重要" : curCat, text: inp.value.trim(), done: false }); inp.value=""; saveAndRenderLug(); }
+      if (inp.value.trim()) { lugItems.push({ cat: curCat === "all" ? "隨身重要" : curCat, text: inp.value.trim(), done: false }); inp.value = ""; saveAndRenderLug(); }
     });
     saveAndRenderLug();
 
+    // 日語字卡
     const PHRASES = [
       { jp: "助けてください", furi: "たすけてください", zh: "請幫幫我" },
       { jp: "救急車を呼んでください", furi: "きゅうきゅうしゃをよんでください", zh: "請叫救護車" },
@@ -1422,12 +1422,12 @@
       { jp: "道に迷いました", furi: "みちにまよいました", zh: "我迷路了" }
     ];
     const phraseModal = document.getElementById("phrase-modal");
-    document.getElementById("phrases-container").innerHTML = PHRASES.map((p, i) => `
-      <article class="ehon-card phrase-card">
-        <div><p class="phrase-jp">${p.jp}</p><p class="phrase-furi">${p.furi}</p><p class="phrase-zh">${p.zh}</p></div>
-        <button type="button" class="zoom-btn" data-pidx="${i}">放大顯示</button>
-      </article>
-    `).join("");
+    document.getElementById("phrases-container").innerHTML = PHRASES.map((p, i) =>
+      '<article class="ehon-card phrase-card">' +
+        '<div><p class="phrase-jp">' + p.jp + '</p><p class="phrase-furi">' + p.furi + '</p><p class="phrase-zh">' + p.zh + '</p></div>' +
+        '<button type="button" class="zoom-btn" data-pidx="' + i + '">放大顯示</button>' +
+      '</article>'
+    ).join("");
     document.querySelectorAll(".zoom-btn").forEach(btn => btn.addEventListener("click", () => {
       const p = PHRASES[btn.dataset.pidx];
       document.getElementById("modal-jp").textContent = p.jp;
@@ -1436,12 +1436,6 @@
       phraseModal.classList.add("open");
     }));
     document.getElementById("close-phrase-btn").addEventListener("click", () => phraseModal.classList.remove("open"));
-
-    const now = new Date();
-    const target = new Date(now.getFullYear(), 2, 19, 7, 10, 0);
-    if (now > target) target.setFullYear(target.getFullYear() + 1);
-    const diff = Math.ceil((target - now)/(1000*60*60*24));
-    document.getElementById("countdown-badge").textContent = diff > 0 ? `⛩️ 距離出發 ${diff} 天` : `🎉 今天出發！`;
   </script>
 </body>
 </html>
