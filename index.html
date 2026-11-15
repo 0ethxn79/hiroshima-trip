@@ -52,11 +52,13 @@
     .nav-pill {
       flex-shrink: 0; text-decoration: none; color: var(--ink); font-size: 13px; font-weight: 700;
       padding: 5px 11px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--white); box-shadow: 0 2px 0 var(--ink);
+      cursor: pointer;
     }
     .nav-pill.c-mizu { background: var(--mizu); }
     .nav-pill.c-yama { background: var(--yamabuki); }
     .nav-pill.c-coral { background: var(--coral); }
     .nav-pill.c-waka { background: var(--wakatake); }
+    .nav-pill.active { filter: brightness(0.92); box-shadow: none; transform: translateY(2px); }
 
     .ehon-card {
       background: var(--white); border: var(--border-w) solid var(--ink);
@@ -78,16 +80,20 @@
     .countdown-pill { background: var(--yamabuki); border: var(--border-w) solid var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 13.5px; font-weight: 700; box-shadow: 0 3px 0 var(--ink); }
     .sync-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--ink); background: var(--wakatake); }
 
-    /* 6 大快捷按鈕列 (3x2 網格) */
     .quick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px; }
     .quick-item {
       text-decoration: none; color: var(--ink); border: var(--border-w) solid var(--ink);
       border-radius: 18px; padding: 10px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 5px; box-shadow: 0 3px 0 var(--ink); font-size: 13px; font-weight: 700;
+      cursor: pointer; background: var(--white);
     }
     .quick-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--white); border: 2.5px solid var(--ink); display: flex; align-items: center; justify-content: center; font-size: 17px; }
 
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin: 26px 0 12px; scroll-margin-top: 76px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin: 10px 0 12px; }
     .section-title { margin: 0; font-size: 21px; }
+
+    /* 分頁切換容器 */
+    .tab-section { display: none; }
+    .tab-section.active-section { display: block; }
 
     .flight-route { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 12px; }
     .airport-code { font-size: 28px; font-weight: 700; line-height: 1.1; }
@@ -152,15 +158,9 @@
     }
 
     /* 記帳與匯率樣式 */
-    .rate-box {
-      background: var(--bg-washi); border: 2.5px solid var(--ink); border-radius: 18px;
-      padding: 12px; margin-bottom: 14px;
-    }
+    .rate-box { background: var(--bg-washi); border: 2.5px solid var(--ink); border-radius: 18px; padding: 12px; margin-bottom: 14px; }
     .rate-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-    .rate-input {
-      flex: 1; border: 2.5px solid var(--ink); border-radius: 12px; padding: 6px 10px;
-      font-family: inherit; font-size: 15px; font-weight: 700; background: var(--white); width: 100%;
-    }
+    .rate-input { flex: 1; border: 2.5px solid var(--ink); border-radius: 12px; padding: 6px 10px; font-family: inherit; font-size: 15px; font-weight: 700; background: var(--white); width: 100%; }
     .expense-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
     .sum-box { border: 2.5px solid var(--ink); border-radius: 16px; padding: 10px 12px; text-align: center; }
     .sum-label { font-size: 12px; font-weight: 700; opacity: 0.8; }
@@ -169,8 +169,7 @@
     .pill-group { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 12px; }
     .choice-pill {
       border: 2.5px solid var(--ink); border-radius: 999px; padding: 4px 12px;
-      font-family: inherit; font-size: 13px; font-weight: 700; background: var(--white);
-      cursor: pointer; transition: transform 0.1s;
+      font-family: inherit; font-size: 13px; font-weight: 700; background: var(--white); cursor: pointer;
     }
     .choice-pill.active-mizu { background: var(--mizu); }
     .choice-pill.active-yama { background: var(--yamabuki); }
@@ -186,10 +185,7 @@
       display: inline-block; font-size: 11.5px; font-weight: 700; padding: 2px 8px;
       border: 2px solid var(--ink); border-radius: 999px; background: var(--yamabuki); margin-right: 4px;
     }
-    .settle-card {
-      background: #FFF9E6; border: 2px dashed var(--ink); border-radius: 14px;
-      padding: 10px 12px; font-size: 13.5px; margin-top: 10px;
-    }
+    .settle-card { background: #FFF9E6; border: 2px dashed var(--ink); border-radius: 14px; padding: 10px 12px; font-size: 13.5px; margin-top: 10px; }
 
     /* 清單與進度條 */
     .progress-text { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; justify-content: space-between; }
@@ -234,13 +230,13 @@
 
   <nav class="top-nav" aria-label="主導覽列">
     <div class="top-nav-inner">
-      <a href="#sec-flight" class="nav-pill c-mizu">✈️ 航班</a>
-      <a href="#sec-schedule" class="nav-pill c-yama">📅 行程</a>
-      <a href="#sec-expense" class="nav-pill c-waka">💰 記帳</a>
-      <a href="#sec-hotel" class="nav-pill c-coral">🏠 住宿</a>
-      <a href="#sec-pre" class="nav-pill c-waka">✅ 出發前</a>
-      <a href="#sec-luggage" class="nav-pill c-mizu">🧳 行李</a>
-      <a href="#sec-helper" class="nav-pill c-coral">🆘 小幫手</a>
+      <button type="button" class="nav-pill c-mizu tab-btn" data-target="sec-flight-box">✈️ 航班</button>
+      <button type="button" class="nav-pill c-yama tab-btn active" data-target="sec-schedule-box">📅 行程</button>
+      <button type="button" class="nav-pill c-waka tab-btn" data-target="sec-expense-box">💰 記帳</button>
+      <button type="button" class="nav-pill c-coral tab-btn" data-target="sec-hotel-box">🏠 住宿</button>
+      <button type="button" class="nav-pill c-waka tab-btn" data-target="sec-pre-box">✅ 任務</button>
+      <button type="button" class="nav-pill c-mizu tab-btn" data-target="sec-luggage-box">🧳 行李</button>
+      <button type="button" class="nav-pill c-coral tab-btn" data-target="sec-helper-box">🆘 小幫手</button>
     </div>
   </nav>
 
@@ -270,184 +266,201 @@
       <span class="sync-status" id="cloud-status">☁️ 準備同步</span>
     </div>
 
+    <!-- 6 大快捷按鈕列 (點擊直接切換分頁) -->
     <div class="quick-grid">
-      <a href="#sec-flight" class="quick-item" style="background: var(--mizu);"><span class="quick-circle">✈️</span><span>航班</span></a>
-      <a href="#sec-schedule" class="quick-item" style="background: var(--yamabuki);"><span class="quick-circle">📅</span><span>行程</span></a>
-      <a href="#sec-expense" class="quick-item" style="background: var(--wakatake);"><span class="quick-circle">💰</span><span>記帳匯率</span></a>
-      <a href="#sec-hotel" class="quick-item" style="background: var(--coral);"><span class="quick-circle">🏠</span><span>住宿</span></a>
-      <a href="#sec-luggage" class="quick-item" style="background: var(--mizu);"><span class="quick-circle">🧳</span><span>行李</span></a>
-      <a href="#sec-helper" class="quick-item" style="background: var(--yamabuki);"><span class="quick-circle">🆘</span><span>小幫手</span></a>
+      <button type="button" class="quick-item tab-btn" data-target="sec-flight-box" style="background: var(--mizu);"><span class="quick-circle">✈️</span><span>航班</span></button>
+      <button type="button" class="quick-item tab-btn" data-target="sec-schedule-box" style="background: var(--yamabuki);"><span class="quick-circle">📅</span><span>行程</span></button>
+      <button type="button" class="quick-item tab-btn" data-target="sec-expense-box" style="background: var(--wakatake);"><span class="quick-circle">💰</span><span>記帳匯率</span></button>
+      <button type="button" class="quick-item tab-btn" data-target="sec-hotel-box" style="background: var(--coral);"><span class="quick-circle">🏠</span><span>住宿</span></button>
+      <button type="button" class="quick-item tab-btn" data-target="sec-luggage-box" style="background: var(--mizu);"><span class="quick-circle">🧳</span><span>行李</span></button>
+      <button type="button" class="quick-item tab-btn" data-target="sec-helper-box" style="background: var(--yamabuki);"><span class="quick-circle">🆘</span><span>小幫手</span></button>
     </div>
 
-    <!-- 1. 航班 -->
-    <div class="section-header" id="sec-flight">
-      <h2 class="section-title">✈️ 飛行小日記</h2>
-      <span class="ehon-badge" style="background: var(--mizu);">中華航空</span>
-    </div>
-
-    <article class="ehon-card">
-      <span class="ehon-badge">去程 ・ 3/19（五）</span>
-      <div class="flight-route">
-        <div><div class="airport-code">TPE</div><div class="airport-name">台北桃園</div><div class="flight-time">07:10 起飛</div></div>
-        <div class="plane-circle">✈️</div>
-        <div style="text-align: right;"><div class="airport-code">HIJ</div><div class="airport-name">廣島機場</div><div class="flight-time">10:25 抵達</div></div>
+    <!-- ================= 1. 航班區塊 ================= -->
+    <div id="sec-flight-box" class="tab-section">
+      <div class="section-header">
+        <h2 class="section-title">✈️ 飛行小日記</h2>
+        <span class="ehon-badge" style="background: var(--mizu);">中華航空</span>
       </div>
-      <div class="flight-footer"><span>航班編號：<strong>CI112</strong></span><span>飛行時間約 2 小時 15 分</span></div>
-    </article>
-
-    <article class="ehon-card">
-      <span class="ehon-badge" style="background: var(--coral);">回程 ・ 3/24（三）</span>
-      <div class="flight-route">
-        <div><div class="airport-code">KIX</div><div class="airport-name">大阪關西</div><div class="flight-time">19:00 起飛</div></div>
-        <div class="plane-circle">✈️</div>
-        <div style="text-align: right;"><div class="airport-code">TPE</div><div class="airport-name">台北桃園</div><div class="flight-time">21:25 抵達</div></div>
-      </div>
-      <div class="flight-footer"><span>航班編號：<strong>CI173</strong></span><span>飛行時間約 3 小時 25 分</span></div>
-    </article>
-
-    <!-- 2. 行程 -->
-    <div class="section-header" id="sec-schedule">
-      <h2 class="section-title">📅 6 天的時間軸</h2>
-      <div style="display:flex; gap:6px;">
-        <button type="button" class="btn-coral" id="refresh-cloud-btn" style="font-size:12px; padding:4px 10px; background:var(--mizu);">🔄 重新抓取雲端</button>
-        <span class="ehon-badge" id="day-area-badge" style="background: var(--wakatake);">廣島・宮島</span>
-      </div>
-    </div>
-
-    <div class="day-tabs" id="day-tabs"></div>
-    <div class="timeline-wrap" id="timeline-container"></div>
-
-    <div style="margin-top: 14px; text-align: center;">
-      <button type="button" class="btn-coral" id="add-spot-btn" style="background: var(--yamabuki);">＋ 在這天新增行程（自動同步給朋友）</button>
-    </div>
-
-    <!-- 3. 記帳與匯率換算 (新增區塊) -->
-    <div class="section-header" id="sec-expense">
-      <h2 class="section-title">💰 旅遊記帳 & 匯率</h2>
-      <span class="ehon-badge" style="background: var(--wakatake);">雲端同步</span>
-    </div>
-
-    <section class="ehon-card">
-      <!-- 即時匯率換算器 -->
-      <div class="rate-box">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:13.5px; font-weight:700;">💱 匯率設定：1 日圓 (JPY) ＝ 多少台幣</span>
-          <button type="button" class="action-btn" id="fetch-rate-btn" style="background:var(--mizu);">🔄 抓最新匯率</button>
+      <article class="ehon-card">
+        <span class="ehon-badge">去程 ・ 3/19（五）</span>
+        <div class="flight-route">
+          <div><div class="airport-code">TPE</div><div class="airport-name">台北桃園</div><div class="flight-time">07:10 起飛</div></div>
+          <div class="plane-circle">✈️</div>
+          <div style="text-align: right;"><div class="airport-code">HIJ</div><div class="airport-name">廣島機場</div><div class="flight-time">10:25 抵達</div></div>
         </div>
-        <div class="rate-row">
-          <input type="number" step="0.0001" id="global-rate-input" class="rate-input" value="0.2150" />
-          <span style="font-size:13px; font-weight:700; white-space:nowrap;">TWD</span>
-        </div>
-        <div id="rate-updated-text" style="font-size:11.5px; opacity:0.75; margin-top:4px;">點擊「抓最新匯率」或直接輸入你換匯的匯率</div>
+        <div class="flight-footer"><span>航班編號：<strong>CI112</strong></span><span>飛行時間約 2 小時 15 分</span></div>
+      </article>
 
-        <!-- 快速隨手算 -->
-        <div style="margin-top:10px; padding-top:10px; border-top:1.5px dashed #D8CFC0; display:flex; align-items:center; gap:8px;">
-          <span style="font-size:13px; font-weight:700;">🧮 快速換算：</span>
-          <input type="text" id="quick-calc-jpy" class="rate-input" placeholder="輸入日圓 (如 1500)" style="font-size:13.5px; padding:4px 8px;" />
-          <span id="quick-calc-twd" style="font-size:14px; font-weight:700; color:#D9534F; white-space:nowrap;">≈ NT$ 0</span>
+      <article class="ehon-card">
+        <span class="ehon-badge" style="background: var(--coral);">回程 ・ 3/24（三）</span>
+        <div class="flight-route">
+          <div><div class="airport-code">KIX</div><div class="airport-name">大阪關西</div><div class="flight-time">19:00 起飛</div></div>
+          <div class="plane-circle">✈️</div>
+          <div style="text-align: right;"><div class="airport-code">TPE</div><div class="airport-name">台北桃園</div><div class="flight-time">21:25 抵達</div></div>
+        </div>
+        <div class="flight-footer"><span>航班編號：<strong>CI173</strong></span><span>飛行時間約 3 小時 25 分</span></div>
+      </article>
+    </div>
+
+    <!-- ================= 2. 行程區塊 (預設顯示) ================= -->
+    <div id="sec-schedule-box" class="tab-section active-section">
+      <div class="section-header">
+        <h2 class="section-title">📅 6 天的時間軸</h2>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn-coral" id="refresh-cloud-btn" style="font-size:12px; padding:4px 10px; background:var(--mizu);">🔄 重新抓取雲端</button>
+          <span class="ehon-badge" id="day-area-badge" style="background: var(--wakatake);">廣島・宮島</span>
         </div>
       </div>
 
-      <!-- 總花費統計 -->
-      <div class="expense-summary-grid">
-        <div class="sum-box" style="background: var(--mizu);">
-          <div class="sum-label">🇯🇵 總花費 (日圓)</div>
-          <div class="sum-val" id="total-jpy-display">¥ 0</div>
-        </div>
-        <div class="sum-box" style="background: var(--yamabuki);">
-          <div class="sum-label">🇹🇼 折合台幣約</div>
-          <div class="sum-val" id="total-twd-display">NT$ 0</div>
-        </div>
+      <div class="day-tabs" id="day-tabs"></div>
+      <div class="timeline-wrap" id="timeline-container"></div>
+
+      <div style="margin-top: 14px; text-align: center;">
+        <button type="button" class="btn-coral" id="add-spot-btn" style="background: var(--yamabuki);">＋ 在這天新增行程（自動同步給朋友）</button>
       </div>
 
-      <!-- 旅伴設定 -->
-      <div style="margin-bottom:12px;">
-        <div style="font-size:13px; font-weight:700; margin-bottom:4px;">👥 旅伴名單（分帳用）：</div>
-        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;" id="members-list-wrap"></div>
-        <div class="add-row" style="margin-top:6px;">
-          <input type="text" id="new-member-input" class="add-input" placeholder="新增旅伴名字 (如：小明)" style="padding:5px 10px; font-size:13px;" />
-          <button type="button" class="add-btn" id="add-member-btn" style="padding:5px 12px; font-size:13px;">＋ 旅伴</button>
-        </div>
+      <div class="tip-banner" style="margin-top: 16px;">
+        <span>🚃</span>
+        <span>抵達當天先綁定或購買交通 IC 卡（ICOCA / Suica），地鐵、JR 與巴士都能輕鬆刷！</span>
       </div>
-
-      <div style="text-align:center; margin: 14px 0;">
-        <button type="button" class="btn-coral" id="open-expense-modal-btn" style="width:100%; background:var(--yamabuki); font-size:15px; padding:10px;">👛 記一筆花費</button>
-      </div>
-
-      <!-- 消費明細列表 -->
-      <div id="expense-list-container"></div>
-
-      <!-- 分攤結算看板 -->
-      <div class="settle-card" id="settlement-box" style="display:none;"></div>
-    </section>
-
-    <!-- 4. 住宿 -->
-    <div class="section-header" id="sec-hotel">
-      <h2 class="section-title">🏠 今晚住哪裡</h2>
-      <span class="ehon-badge" style="background: var(--coral);">共 5 晚</span>
     </div>
 
-    <article class="ehon-card">
-      <span class="ehon-badge">3/19 – 3/20 ・ 1 晚</span>
-      <h3 style="margin: 10px 0 4px; font-size: 19px;">東橫INN廣島站前新幹線口1號</h3>
-      <table class="hotel-table">
-        <tr><td>入住時間</td><td>15:00 後</td></tr>
-        <tr><td>退房時間</td><td>10:00 前</td></tr>
-      </table>
-      <a class="btn-coral" href="https://www.google.com/maps/search/?api=1&query=東橫INN廣島站前新幹線口1號" target="_blank" rel="noopener">📍 開啟 Google 地圖 ↗</a>
-    </article>
-
-    <article class="ehon-card">
-      <span class="ehon-badge">3/20 – 3/24 ・ 4 晚</span>
-      <h3 style="margin: 10px 0 4px; font-size: 19px;">住1道頓堀2號店</h3>
-      <table class="hotel-table">
-        <tr><td>入住時間</td><td>15:00 後</td></tr>
-        <tr><td>退房時間</td><td>10:00 前</td></tr>
-      </table>
-      <a class="btn-coral" href="https://www.google.com/maps/search/?api=1&query=住1道頓堀2號店+大阪市" target="_blank" rel="noopener">📍 開啟 Google 地圖 ↗</a>
-    </article>
-
-    <!-- 5. 出發前 -->
-    <div class="section-header" id="sec-pre"><h2 class="section-title">✅ 出發前的小任務</h2></div>
-    <section class="ehon-card">
-      <div class="progress-text"><span>準備進度</span><span id="pre-progress-label">已完成 0 / 0 項</span></div>
-      <div class="progress-track"><div class="progress-fill" id="pre-progress-bar"></div></div>
-      <ul class="check-list" id="pre-list"></ul>
-      <div class="add-row">
-        <input type="text" class="add-input" id="pre-input" placeholder="新增任務" />
-        <button type="button" class="add-btn" id="pre-add-btn">加入</button>
+    <!-- ================= 3. 記帳區塊 ================= -->
+    <div id="sec-expense-box" class="tab-section">
+      <div class="section-header">
+        <h2 class="section-title">💰 旅遊記帳 & 匯率</h2>
+        <span class="ehon-badge" style="background: var(--wakatake);">雲端同步</span>
       </div>
-    </section>
 
-    <!-- 6. 行李 -->
-    <div class="section-header" id="sec-luggage"><h2 class="section-title">🧳 行李打包清單</h2></div>
-    <section class="ehon-card">
-      <div class="progress-text"><span>行李打包進度</span><span id="lug-progress-label">已完成 0 / 0 項</span></div>
-      <div class="progress-track"><div class="progress-fill" id="lug-progress-bar" style="background: var(--mizu);"></div></div>
-      <div class="luggage-tabs" id="luggage-tabs">
-        <button type="button" class="lug-tab active" data-cat="all">全部</button>
-        <button type="button" class="lug-tab" data-cat="隨身重要">隨身重要</button>
-        <button type="button" class="lug-tab" data-cat="衣物穿搭">衣物穿搭</button>
-        <button type="button" class="lug-tab" data-cat="3C電器">3C電器</button>
-        <button type="button" class="lug-tab" data-cat="日常藥品">日常藥品</button>
-      </div>
-      <ul class="check-list" id="lug-list"></ul>
-      <div class="add-row">
-        <input type="text" class="add-input" id="lug-input" placeholder="新增行李項目" />
-        <button type="button" class="add-btn" id="lug-add-btn">加入</button>
-      </div>
-    </section>
+      <section class="ehon-card" style="margin-bottom:0;">
+        <div class="rate-box">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:13.5px; font-weight:700;">💱 匯率設定：1 日圓 ＝ 台幣</span>
+            <button type="button" class="action-btn" id="fetch-rate-btn" style="background:var(--mizu);">🔄 抓最新匯率</button>
+          </div>
+          <div class="rate-row">
+            <input type="number" step="0.0001" id="global-rate-input" class="rate-input" value="0.2150" />
+            <span style="font-size:13px; font-weight:700; white-space:nowrap;">TWD</span>
+          </div>
+          <div id="rate-updated-text" style="font-size:11.5px; opacity:0.75; margin-top:4px;">點擊「抓最新匯率」或自行輸入</div>
 
-    <!-- 7. 小幫手 -->
-    <div class="section-header" id="sec-helper">
-      <h2 class="section-title">🆘 旅遊小幫手</h2>
-      <span class="ehon-badge" style="background: var(--mizu);">離線可用</span>
+          <div style="margin-top:10px; padding-top:10px; border-top:1.5px dashed #D8CFC0; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700;">🧮 快速換算：</span>
+            <input type="text" id="quick-calc-jpy" class="rate-input" placeholder="輸入日圓 (如 1500)" style="font-size:13.5px; padding:4px 8px;" />
+            <span id="quick-calc-twd" style="font-size:14px; font-weight:700; color:#D9534F; white-space:nowrap;">≈ NT$ 0</span>
+          </div>
+        </div>
+
+        <div class="expense-summary-grid">
+          <div class="sum-box" style="background: var(--mizu);">
+            <div class="sum-label">🇯🇵 總花費 (日圓)</div>
+            <div class="sum-val" id="total-jpy-display">¥ 0</div>
+          </div>
+          <div class="sum-box" style="background: var(--yamabuki);">
+            <div class="sum-label">🇹🇼 折合台幣約</div>
+            <div class="sum-val" id="total-twd-display">NT$ 0</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <div style="font-size:13px; font-weight:700; margin-bottom:4px;">👥 旅伴名單（分帳用）：</div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;" id="members-list-wrap"></div>
+          <div class="add-row" style="margin-top:6px;">
+            <input type="text" id="new-member-input" class="add-input" placeholder="新增旅伴名字" style="padding:5px 10px; font-size:13px;" />
+            <button type="button" class="add-btn" id="add-member-btn" style="padding:5px 12px; font-size:13px;">＋ 旅伴</button>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin: 14px 0;">
+          <button type="button" class="btn-coral" id="open-expense-modal-btn" style="width:100%; background:var(--yamabuki); font-size:15px; padding:10px;">👛 記一筆花費</button>
+        </div>
+
+        <!-- 摺疊明細按鈕 -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:14px; font-weight:700;">📋 消費明細紀錄</span>
+          <button type="button" class="action-btn" id="toggle-exp-list-btn" style="background:var(--yamabuki);">收合 / 展開明細</button>
+        </div>
+
+        <div id="expense-list-container"></div>
+        <div class="settle-card" id="settlement-box" style="display:none;"></div>
+      </section>
     </div>
-    <div class="sos-grid">
-      <div class="sos-card"><div class="sos-num">110</div><div class="sos-desc">日本警察局</div><a href="tel:110" class="call-pill">📞 撥打</a></div>
-      <div class="sos-card"><div class="sos-num">119</div><div class="sos-desc">火警・救護車</div><a href="tel:119" class="call-pill">📞 撥打</a></div>
+
+    <!-- ================= 4. 住宿區塊 ================= -->
+    <div id="sec-hotel-box" class="tab-section">
+      <div class="section-header">
+        <h2 class="section-title">🏠 今晚住哪裡</h2>
+        <span class="ehon-badge" style="background: var(--coral);">共 5 晚</span>
+      </div>
+      <article class="ehon-card">
+        <span class="ehon-badge">3/19 – 3/20 ・ 1 晚</span>
+        <h3 style="margin: 10px 0 4px; font-size: 19px;">東橫INN廣島站前新幹線口1號</h3>
+        <table class="hotel-table">
+          <tr><td>入住時間</td><td>15:00 後</td></tr>
+          <tr><td>退房時間</td><td>10:00 前</td></tr>
+        </table>
+        <a class="btn-coral" href="https://www.google.com/maps/search/?api=1&query=東橫INN廣島站前新幹線口1號" target="_blank" rel="noopener">📍 開啟 Google 地圖 ↗</a>
+      </article>
+
+      <article class="ehon-card">
+        <span class="ehon-badge">3/20 – 3/24 ・ 4 晚</span>
+        <h3 style="margin: 10px 0 4px; font-size: 19px;">住1道頓堀2號店</h3>
+        <table class="hotel-table">
+          <tr><td>入住時間</td><td>15:00 後</td></tr>
+          <tr><td>退房時間</td><td>10:00 前</td></tr>
+        </table>
+        <a class="btn-coral" href="https://www.google.com/maps/search/?api=1&query=住1道頓堀2號店+大阪市" target="_blank" rel="noopener">📍 開啟 Google 地圖 ↗</a>
+      </article>
     </div>
-    <div id="phrases-container"></div>
+
+    <!-- ================= 5. 出發前任務 ================= -->
+    <div id="sec-pre-box" class="tab-section">
+      <div class="section-header"><h2 class="section-title">✅ 出發前的小任務</h2></div>
+      <section class="ehon-card" style="margin-bottom:0;">
+        <div class="progress-text"><span>準備進度</span><span id="pre-progress-label">已完成 0 / 0 項</span></div>
+        <div class="progress-track"><div class="progress-fill" id="pre-progress-bar"></div></div>
+        <ul class="check-list" id="pre-list"></ul>
+        <div class="add-row">
+          <input type="text" class="add-input" id="pre-input" placeholder="新增任務" />
+          <button type="button" class="add-btn" id="pre-add-btn">加入</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= 6. 行李打包清單 ================= -->
+    <div id="sec-luggage-box" class="tab-section">
+      <div class="section-header"><h2 class="section-title">🧳 行李打包清單</h2></div>
+      <section class="ehon-card" style="margin-bottom:0;">
+        <div class="progress-text"><span>行李打包進度</span><span id="lug-progress-label">已完成 0 / 0 項</span></div>
+        <div class="progress-track"><div class="progress-fill" id="lug-progress-bar" style="background: var(--mizu);"></div></div>
+        <div class="luggage-tabs" id="luggage-tabs">
+          <button type="button" class="lug-tab active" data-cat="all">全部</button>
+          <button type="button" class="lug-tab" data-cat="隨身重要">隨身重要</button>
+          <button type="button" class="lug-tab" data-cat="衣物穿搭">衣物穿搭</button>
+          <button type="button" class="lug-tab" data-cat="3C電器">3C電器</button>
+          <button type="button" class="lug-tab" data-cat="日常藥品">日常藥品</button>
+        </div>
+        <ul class="check-list" id="lug-list"></ul>
+        <div class="add-row">
+          <input type="text" class="add-input" id="lug-input" placeholder="新增行李項目" />
+          <button type="button" class="add-btn" id="lug-add-btn">加入</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= 7. 旅遊小幫手 ================= -->
+    <div id="sec-helper-box" class="tab-section">
+      <div class="section-header">
+        <h2 class="section-title">🆘 旅遊小幫手</h2>
+        <span class="ehon-badge" style="background: var(--mizu);">離線可用</span>
+      </div>
+      <div class="sos-grid">
+        <div class="sos-card"><div class="sos-num">110</div><div class="sos-desc">日本警察局</div><a href="tel:110" class="call-pill">📞 撥打</a></div>
+        <div class="sos-card"><div class="sos-num">119</div><div class="sos-desc">火警・救護車</div><a href="tel:119" class="call-pill">📞 撥打</a></div>
+      </div>
+      <div id="phrases-container"></div>
+    </div>
   </main>
 
   <!-- 行程編輯彈窗 -->
@@ -488,13 +501,12 @@
     </div>
   </div>
 
-  <!-- 記帳彈窗 (繪本風設計) -->
+  <!-- 記帳彈窗 -->
   <div class="modal-backdrop" id="expense-modal">
     <div class="modal-box">
       <h3 style="margin-top:0; text-align:center;">👛 記一筆</h3>
-      
-      <label style="font-size:13px; font-weight:700;">金額（可直接打算式，如 1200*3 或 580+320）：</label>
-      <input type="text" id="exp-amount" class="modal-input" placeholder="例如：1200 或 1200*3" style="font-size:16px; font-weight:700;" />
+      <label style="font-size:13px; font-weight:700;">金額（可打算式，如 1200*3）：</label>
+      <input type="text" id="exp-amount" class="modal-input" placeholder="例如：1200" style="font-size:16px; font-weight:700;" />
       <div id="exp-calc-preview" style="font-size:12.5px; font-weight:700; color:#2B7A78; margin:-4px 0 10px;">換算：≈ NT$ 0</div>
 
       <label style="font-size:13px; font-weight:700;">幣別：</label>
@@ -516,11 +528,11 @@
       <label style="font-size:13px; font-weight:700;">誰付的：</label>
       <div class="pill-group" id="exp-payer-group"></div>
 
-      <label style="font-size:13px; font-weight:700;">幫誰付（可複選，自動平分）：</label>
+      <label style="font-size:13px; font-weight:700;">幫誰付（自動平分）：</label>
       <div class="pill-group" id="exp-split-group"></div>
 
-      <label style="font-size:13px; font-weight:700;">日期 / 備註：</label>
-      <input type="text" id="exp-note" class="modal-input" placeholder="例如：宮島星鰻飯、伴手禮..." />
+      <label style="font-size:13px; font-weight:700;">備註：</label>
+      <input type="text" id="exp-note" class="modal-input" placeholder="例如：宮島星鰻飯" />
 
       <div style="display:flex; gap:10px; margin-top:14px;">
         <button type="button" class="btn-coral" id="exp-save-btn" style="flex:1; background:var(--yamabuki);">儲存並同步</button>
@@ -604,6 +616,7 @@
 
     let activeDayIdx = 0;
     let editingSpotIdx = null;
+    let showExpenseList = true;
     const statusBadge = document.getElementById("cloud-status");
 
     function setCloudStatus(text, bg = "var(--wakatake)") {
@@ -611,7 +624,22 @@
       statusBadge.style.background = bg;
     }
 
-    // 雲端同步（自動相容：可同時儲存行程與記帳資料）
+    // 分頁切換邏輯
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.dataset.target;
+        document.querySelectorAll(".tab-section").forEach(sec => sec.classList.remove("active-section"));
+        document.getElementById(targetId).classList.add("active-section");
+
+        // 同步頂端與快捷按鈕的 active 狀態
+        document.querySelectorAll(".tab-btn").forEach(b => {
+          if (b.dataset.target === targetId) b.classList.add("active");
+          else b.classList.remove("active");
+        });
+        window.scrollTo({ top: 220, behavior: "smooth" });
+      });
+    });
+
     async function loadFromGoogleSheet() {
       if (!GOOGLE_SHEET_API_URL.startsWith("http")) {
         setCloudStatus("⚠️ 尚未填入雲端網址", "var(--yamabuki)");
@@ -773,7 +801,6 @@
     const rateText = document.getElementById("rate-updated-text");
     rateInput.value = expenseData.rate || 0.2150;
 
-    // 抓取即時匯率 (使用免費公開匯率 API)
     async function fetchLiveExchangeRate() {
       rateText.textContent = "⏳ 正在抓取最新日圓匯率...";
       try {
@@ -784,12 +811,12 @@
           rateInput.value = liveRate;
           expenseData.rate = liveRate;
           const nowStr = new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" });
-          rateText.textContent = `✅ 已更新即時匯率：1 JPY = ${liveRate} TWD (更新於 ${nowStr})`;
+          rateText.textContent = `✅ 已更新即時匯率：1 JPY = ${liveRate} TWD (${nowStr})`;
           saveToGoogleSheet();
           renderExpenses();
         }
       } catch (e) {
-        rateText.textContent = "⚠️ 無法連線抓匯率，請手動輸入匯率數字";
+        rateText.textContent = "⚠️ 無法連線抓匯率，請手動輸入";
       }
     }
 
@@ -803,7 +830,6 @@
       }
     });
 
-    // 安全算式計算機 (支援 + - * / 與括號)
     function evalMathExpr(str) {
       const cleaned = String(str).replace(/[^0-9+\-*/().]/g, "");
       if (!cleaned) return 0;
@@ -815,14 +841,12 @@
       }
     }
 
-    // 快速換算欄
     document.getElementById("quick-calc-jpy").addEventListener("input", (e) => {
       const jpy = evalMathExpr(e.target.value);
       const rate = parseFloat(rateInput.value) || 0.215;
       document.getElementById("quick-calc-twd").textContent = `≈ NT$ ${Math.round(jpy * rate).toLocaleString()}`;
     });
 
-    // 旅伴管理
     function renderMembers() {
       const wrap = document.getElementById("members-list-wrap");
       wrap.innerHTML = expenseData.members.map((m, idx) => `
@@ -851,7 +875,6 @@
       }
     });
 
-    // 記帳彈窗邏輯
     const expModal = document.getElementById("expense-modal");
     let selCurrency = "JPY";
     let selCategory = "餐飲";
@@ -863,7 +886,7 @@
       const rate = parseFloat(rateInput.value) || 0.215;
       const twd = selCurrency === "JPY" ? Math.round(amt * rate) : Math.round(amt);
       const jpy = selCurrency === "JPY" ? Math.round(amt) : Math.round(amt / rate);
-      document.getElementById("exp-calc-preview").textContent = `計算結果：¥ ${jpy.toLocaleString()} 日圓 ／ 折合 NT$ ${twd.toLocaleString()} 台幣`;
+      document.getElementById("exp-calc-preview").textContent = `換算：¥ ${jpy.toLocaleString()} 日圓 ／ NT$ ${twd.toLocaleString()} 台幣`;
     }
 
     document.getElementById("exp-amount").addEventListener("input", updateExpPreview);
@@ -932,10 +955,7 @@
 
     document.getElementById("exp-save-btn").addEventListener("click", () => {
       const amt = evalMathExpr(document.getElementById("exp-amount").value);
-      if (amt <= 0) {
-        alert("請輸入大於 0 的金額喔！");
-        return;
-      }
+      if (amt <= 0) { alert("請輸入大於 0 的金額喔！"); return; }
       const rate = parseFloat(rateInput.value) || 0.215;
       const jpy = selCurrency === "JPY" ? Math.round(amt) : Math.round(amt / rate);
       const twd = selCurrency === "JPY" ? Math.round(amt * rate) : Math.round(amt);
@@ -960,6 +980,11 @@
       saveToGoogleSheet();
     });
 
+    document.getElementById("toggle-exp-list-btn").addEventListener("click", () => {
+      showExpenseList = !showExpenseList;
+      renderExpenses();
+    });
+
     function renderExpenses() {
       let totalJpy = 0;
       let totalTwd = 0;
@@ -972,17 +997,17 @@
         totalTwd += item.twd;
         if (paidMap[item.payer] !== undefined) paidMap[item.payer] += item.twd;
         const share = item.twd / (item.splitFor.length || 1);
-        item.splitFor.forEach(m => {
-          if (owedMap[m] !== undefined) owedMap[m] += share;
-        });
+        item.splitFor.forEach(m => { if (owedMap[m] !== undefined) owedMap[m] += share; });
       });
 
       document.getElementById("total-jpy-display").textContent = `¥ ${totalJpy.toLocaleString()}`;
       document.getElementById("total-twd-display").textContent = `NT$ ${totalTwd.toLocaleString()}`;
 
       const listEl = document.getElementById("expense-list-container");
-      if (expenseData.items.length === 0) {
-        listEl.innerHTML = `<p style="text-align:center; opacity:0.6; font-size:13.5px; margin:10px 0;">還沒有記帳紀錄，點上方「記一筆花費」開始吧！</p>`;
+      if (!showExpenseList) {
+        listEl.innerHTML = `<p style="text-align:center; opacity:0.5; font-size:13px; margin:6px 0;">(明細已收合)</p>`;
+      } else if (expenseData.items.length === 0) {
+        listEl.innerHTML = `<p style="text-align:center; opacity:0.6; font-size:13.5px; margin:10px 0;">還沒有記帳紀錄，點上方按鈕開始記帳吧！</p>`;
       } else {
         listEl.innerHTML = expenseData.items.map((item, idx) => `
           <div class="expense-item">
@@ -1011,7 +1036,6 @@
         });
       }
 
-      // 分帳結算顯示
       const settleEl = document.getElementById("settlement-box");
       if (expenseData.members.length > 1 && expenseData.items.length > 0) {
         settleEl.style.display = "block";
