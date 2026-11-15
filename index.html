@@ -39,7 +39,7 @@
 
     .app-container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
 
-    /* 放大並固定於頂端的左右滑動導覽列 */
+    /* 固定於頂端的左右滑動導覽列 */
     .top-nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       background-color: var(--bg-washi); border-bottom: var(--border-w) solid var(--ink);
@@ -152,6 +152,32 @@
       font-size: 14px; font-weight: 700; box-shadow: 0 3px 0 var(--ink); cursor: pointer; font-family: inherit;
     }
 
+    /* 天氣與美食卡片專屬樣式 */
+    .weather-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 6px; border-bottom: 1.5px dashed #E2D9C8; font-size: 14.5px;
+    }
+    .weather-row:last-child { border-bottom: none; }
+    .weather-temp { font-weight: 700; font-size: 15px; }
+    .weather-rain {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: var(--mizu); border: 2px solid var(--ink); border-radius: 999px;
+      padding: 2px 9px; font-size: 12px; font-weight: 700;
+    }
+    .food-card {
+      background: var(--white); border: 2.5px solid var(--ink); border-radius: 18px;
+      padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 3px 0 var(--ink);
+    }
+    .food-title { font-size: 16.5px; font-weight: 700; margin: 0 0 4px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+    .food-meta { font-size: 12.5px; opacity: 0.8; margin-bottom: 8px; }
+    .food-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tabelog-btn {
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 11px;
+      background: #FFCC66; color: var(--ink); text-decoration: none;
+      border: 2px solid var(--ink); border-radius: 12px; font-size: 12.5px; font-weight: 700;
+      box-shadow: 0 2px 0 var(--ink);
+    }
+
     /* 記帳與匯率樣式 */
     .rate-box { background: var(--bg-washi); border: 2.5px solid var(--ink); border-radius: 18px; padding: 12px; margin-bottom: 14px; }
     .rate-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
@@ -223,11 +249,13 @@
 </head>
 <body>
 
-  <!-- 放大且鎖定置頂的左右滑動導覽列 -->
+  <!-- 鎖定置頂的左右滑動導覽列 -->
   <nav class="top-nav" aria-label="主導覽列">
     <div class="top-nav-inner">
       <button type="button" class="nav-pill c-mizu tab-btn" data-target="sec-flight-box">✈️ 航班</button>
       <button type="button" class="nav-pill c-yama tab-btn active" data-target="sec-schedule-box">📅 行程</button>
+      <button type="button" class="nav-pill c-mizu tab-btn" data-target="sec-weather-box">🌤️ 天氣</button>
+      <button type="button" class="nav-pill c-coral tab-btn" data-target="sec-food-box">🍜 美食</button>
       <button type="button" class="nav-pill c-waka tab-btn" data-target="sec-expense-box">💰 記帳</button>
       <button type="button" class="nav-pill c-coral tab-btn" data-target="sec-hotel-box">🏠 住宿</button>
       <button type="button" class="nav-pill c-waka tab-btn" data-target="sec-pre-box">✅ 任務</button>
@@ -312,7 +340,63 @@
       </div>
     </div>
 
-    <!-- ================= 3. 記帳區塊 ================= -->
+    <!-- ================= 3. 天氣預報區塊 (這週 + 下週 14 天) ================= -->
+    <div id="sec-weather-box" class="tab-section">
+      <div class="section-header">
+        <h2 class="section-title">🌤️ 這週＆下週天氣</h2>
+        <span class="ehon-badge" style="background: var(--mizu);" id="weather-city-label">廣島・宮島</span>
+      </div>
+
+      <div class="pill-group" style="margin-bottom: 12px;">
+        <button type="button" class="choice-pill active-mizu weather-loc-btn" data-lat="34.3853" data-lon="132.4553" data-name="廣島・宮島">⛩️ 廣島・宮島</button>
+        <button type="button" class="choice-pill weather-loc-btn" data-lat="34.6937" data-lon="135.5023" data-name="大阪・京都・奈良">🏯 大阪・京都</button>
+        <button type="button" class="choice-pill weather-loc-btn" id="weather-gps-btn" data-name="我的目前位置">📍 我的定位</button>
+      </div>
+
+      <article class="ehon-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="ehon-badge" style="background: var(--yamabuki);">📅 這週預報（Day 1 – 7）</span>
+          <span style="font-size:12px; opacity:0.7;">氣溫 / 降雨機率</span>
+        </div>
+        <div id="weather-this-week"><p style="text-align:center; opacity:0.6;">⏳ 正在抓取最新氣象資料...</p></div>
+      </article>
+
+      <article class="ehon-card" style="margin-bottom:0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="ehon-badge" style="background: var(--wakatake);">🗓️ 下週預報（Day 8 – 14）</span>
+          <span style="font-size:12px; opacity:0.7;">氣溫 / 降雨機率</span>
+        </div>
+        <div id="weather-next-week"><p style="text-align:center; opacity:0.6;">⏳ 載入中...</p></div>
+      </article>
+    </div>
+
+    <!-- ================= 4. 附近美食 & Tabelog 推薦區塊 ================= -->
+    <div id="sec-food-box" class="tab-section">
+      <div class="section-header">
+        <h2 class="section-title">🍜 附近高分美食</h2>
+        <span class="ehon-badge" style="background: var(--coral);">Tabelog 連動</span>
+      </div>
+
+      <article class="ehon-card" style="background: #FFF9EC;">
+        <div style="font-size:14px; font-weight:700; margin-bottom:8px;">📍 依你的目前定位自動搜尋周邊 10+ 家餐廳/小吃</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <button type="button" class="btn-coral" id="locate-food-btn" style="flex:1; background: var(--yamabuki);">📡 用目前定位搜尋附近美食</button>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+          <button type="button" class="choice-pill preset-food-btn" data-lat="34.3955" data-lon="132.4536" data-area="廣島市中心">廣島站・本通周邊</button>
+          <button type="button" class="choice-pill preset-food-btn" data-lat="34.2961" data-lon="132.3198" data-area="宮島">宮島表參道</button>
+          <button type="button" class="choice-pill preset-food-btn" data-lat="34.6687" data-lon="135.5013" data-area="道頓堀・心齋橋">道頓堀・心齋橋</button>
+        </div>
+        <div id="tabelog-area-banner" style="margin-top:10px; padding-top:10px; border-top:1.5px dashed #D8CFC0; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <span id="food-status-text" style="font-size:12.5px; font-weight:700;">尚未定位，可點上方按鈕取得附近店家</span>
+          <a id="tabelog-top-ranking-link" href="https://tabelog.com/rstLst/?SrtT=rt&Srt=D" target="_blank" rel="noopener" class="tabelog-btn" style="flex-shrink:0;">🏆 Tabelog 高分榜 ↗</a>
+        </div>
+      </article>
+
+      <div id="food-list-container"></div>
+    </div>
+
+    <!-- ================= 5. 記帳區塊 ================= -->
     <div id="sec-expense-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">💰 旅遊記帳 & 匯率</h2>
@@ -362,7 +446,6 @@
           <button type="button" class="btn-coral" id="open-expense-modal-btn" style="width:100%; background:var(--yamabuki); font-size:15px; padding:10px;">👛 記一筆花費</button>
         </div>
 
-        <!-- 摺疊明細按鈕 -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <span style="font-size:14px; font-weight:700;">📋 消費明細紀錄</span>
           <button type="button" class="action-btn" id="toggle-exp-list-btn" style="background:var(--yamabuki);">收合 / 展開明細</button>
@@ -373,7 +456,7 @@
       </section>
     </div>
 
-    <!-- ================= 4. 住宿區塊 ================= -->
+    <!-- ================= 6. 住宿區塊 ================= -->
     <div id="sec-hotel-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">🏠 今晚住哪裡</h2>
@@ -400,7 +483,7 @@
       </article>
     </div>
 
-    <!-- ================= 5. 出發前任務 ================= -->
+    <!-- ================= 7. 出發前任務 ================= -->
     <div id="sec-pre-box" class="tab-section">
       <div class="section-header"><h2 class="section-title">✅ 出發前的小任務</h2></div>
       <section class="ehon-card" style="margin-bottom:0;">
@@ -414,7 +497,7 @@
       </section>
     </div>
 
-    <!-- ================= 6. 行李打包清單 ================= -->
+    <!-- ================= 8. 行李打包清單 ================= -->
     <div id="sec-luggage-box" class="tab-section">
       <div class="section-header"><h2 class="section-title">🧳 行李打包清單</h2></div>
       <section class="ehon-card" style="margin-bottom:0;">
@@ -435,7 +518,7 @@
       </section>
     </div>
 
-    <!-- ================= 7. 旅遊小幫手 ================= -->
+    <!-- ================= 9. 旅遊小幫手 ================= -->
     <div id="sec-helper-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">🆘 旅遊小幫手</h2>
@@ -624,10 +707,207 @@
           if (b.dataset.target === targetId) b.classList.add("active");
           else b.classList.remove("active");
         });
+        if (targetId === "sec-weather-box" && !weatherLoadedOnce) {
+          fetchWeatherForecast(34.3853, 132.4553, "廣島・宮島");
+        }
+        if (targetId === "sec-food-box" && !foodLoadedOnce) {
+          fetchNearbyFood(34.3955, 132.4536, "廣島市中心");
+        }
         window.scrollTo({ top: 120, behavior: "smooth" });
       });
     });
 
+    /* ================= 天氣預報功能 (Open-Meteo 14天這週+下週) ================= */
+    let weatherLoadedOnce = false;
+
+    function getWeatherEmoji(code) {
+      if (code === 0) return "☀️ 晴朗";
+      if (code <= 3) return "⛅ 多雲時晴";
+      if (code <= 48) return "🌫️ 起霧";
+      if (code <= 67) return "🌧️ 下雨";
+      if (code <= 77) return "❄️ 降雪";
+      if (code <= 82) return "🌦️ 陣雨";
+      return "⛈️ 雷雨";
+    }
+
+    async function fetchWeatherForecast(lat, lon, labelName) {
+      weatherLoadedOnce = true;
+      document.getElementById("weather-city-label").textContent = labelName;
+      const thisWeekEl = document.getElementById("weather-this-week");
+      const nextWeekEl = document.getElementById("weather-next-week");
+      thisWeekEl.innerHTML = `<p style="text-align:center; opacity:0.6;">⏳ 正在更新 ${labelName} 這週天氣...</p>`;
+      nextWeekEl.innerHTML = `<p style="text-align:center; opacity:0.6;">⏳ 正在更新 ${labelName} 下週天氣...</p>`;
+
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=14`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const d = data.daily;
+        const weekDays = ["日", "一", "二", "三", "四", "五", "六"];
+
+        const renderRows = (startIdx, endIdx) => {
+          let html = "";
+          for (let i = startIdx; i < endIdx && i < d.time.length; i++) {
+            const dt = new Date(d.time[i] + "T00:00:00");
+            const dateLabel = `${dt.getMonth() + 1}/${dt.getDate()} (${weekDays[dt.getDay()]})`;
+            const iconText = getWeatherEmoji(d.weathercode[i]);
+            const tMin = Math.round(d.temperature_2m_min[i]);
+            const tMax = Math.round(d.temperature_2m_max[i]);
+            const pop = d.precipitation_probability_max[i] ?? 0;
+            html += `
+              <div class="weather-row">
+                <div style="min-width:85px; font-weight:700;">${dateLabel}</div>
+                <div style="flex:1;">${iconText}</div>
+                <div class="weather-temp" style="margin-right:8px;">${tMin}° ~ ${tMax}°C</div>
+                <span class="weather-rain">☔ ${pop}%</span>
+              </div>
+            `;
+          }
+          return html;
+        };
+
+        thisWeekEl.innerHTML = renderRows(0, 7);
+        nextWeekEl.innerHTML = renderRows(7, 14);
+      } catch (e) {
+        thisWeekEl.innerHTML = `<p style="text-align:center; color:#D9534F;">⚠️ 天氣資料載入失敗，請檢查網路後重試</p>`;
+        nextWeekEl.innerHTML = "";
+      }
+    }
+
+    document.querySelectorAll(".weather-loc-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".weather-loc-btn").forEach(b => b.classList.remove("active-mizu"));
+        btn.classList.add("active-mizu");
+        if (btn.id === "weather-gps-btn") {
+          if (!navigator.geolocation) {
+            alert("你的瀏覽器不支援 GPS 定位");
+            return;
+          }
+          document.getElementById("weather-this-week").innerHTML = `<p style="text-align:center;">📡 正在取得你的 GPS 位置...</p>`;
+          navigator.geolocation.getCurrentPosition(
+            pos => fetchWeatherForecast(pos.coords.latitude, pos.coords.longitude, "我的目前位置"),
+            () => alert("無法取得定位權限，請確認手機已允許瀏覽器使用位置資訊！")
+          );
+        } else {
+          fetchWeatherForecast(btn.dataset.lat, btn.dataset.lon, btn.dataset.name);
+        }
+      });
+    });
+
+    /* ================= 附近美食 & Tabelog 連動功能 ================= */
+    let foodLoadedOnce = false;
+
+    function calcDistanceMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const toRad = x => x * Math.PI / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+      return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+    }
+
+    function translateCuisine(tagStr, amenityStr) {
+      const map = {
+        ramen: "🍜 拉麵", sushi: "🍣 壽司", izakaya: "🏮 居酒屋", cafe: "☕ 咖啡・甜點",
+        japanese: "🍱 和食料理", okonomiyaki: "🥞 廣島燒/大阪燒", udon: "🍲 烏龍麵",
+        soba: "🥢 蕎麥麵", yakiniku: "🥩 燒肉", curry: "🍛 咖哩", burger: "🍔 漢堡輕食",
+        chinese: "🥟 中華料理", italian: "🍝 義式料理", seafood: "🦪 海鮮料理"
+      };
+      if (tagStr) {
+        const key = tagStr.split(";")[0].toLowerCase().trim();
+        if (map[key]) return map[key];
+      }
+      if (amenityStr === "cafe") return "☕ 咖啡・甜點";
+      if (amenityStr === "fast_food") return "🍢 在地小吃・快餐";
+      if (amenityStr === "izakaya" || amenityStr === "pub" || amenityStr === "bar") return "🏮 居酒屋・小酌";
+      return "🍽️ 精選餐廳";
+    }
+
+    async function fetchNearbyFood(lat, lon, areaLabel) {
+      foodLoadedOnce = true;
+      const statusEl = document.getElementById("food-status-text");
+      const listEl = document.getElementById("food-list-container");
+      const topLink = document.getElementById("tabelog-top-ranking-link");
+
+      statusEl.textContent = `⏳ 正在搜尋「${areaLabel}」周邊 1 公里內美食...`;
+      listEl.innerHTML = `<div class="ehon-card" style="text-align:center;">📡 搜尋附近餐廳與小吃中，請稍候...</div>`;
+      topLink.href = `https://tabelog.com/rstLst/?vs=1&sa=${encodeURIComponent(areaLabel)}&sk=&SrtT=rt&Srt=D`;
+
+      const query = `[out:json][timeout:15];(node["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,${lat},${lon});way["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,${lat},${lon}););out center 40;`;
+
+      try {
+        const res = await fetch("https://overpass-api.de/api/interpreter", {
+          method: "POST",
+          body: "data=" + encodeURIComponent(query)
+        });
+        const data = await res.json();
+        const places = (data.elements || [])
+          .filter(el => el.tags && (el.tags.name || el.tags["name:ja"] || el.tags["name:zh"]))
+          .map(el => {
+            const pLat = el.lat || (el.center && el.center.lat);
+            const pLon = el.lon || (el.center && el.center.lon);
+            const name = el.tags["name:zh"] || el.tags.name || el.tags["name:ja"];
+            const jpName = el.tags["name:ja"] || el.tags.name;
+            const dist = calcDistanceMeters(lat, lon, pLat, pLon);
+            const cat = translateCuisine(el.tags.cuisine, el.tags.amenity);
+            const hours = el.tags.opening_hours || "";
+            return { name, jpName, dist, cat, hours, pLat, pLon };
+          })
+          .sort((a, b) => a.dist - b.dist)
+          .slice(0, 15);
+
+        if (places.length === 0) {
+          statusEl.textContent = `⚠️ 「${areaLabel}」附近暫無資料，請點右側看 Tabelog 排行`;
+          listEl.innerHTML = "";
+          return;
+        }
+
+        statusEl.textContent = `✅ 已為你找到 ${places.length} 家「${areaLabel}」附近餐廳/小吃`;
+        listEl.innerHTML = places.map((p, idx) => {
+          const tabelogSearchUrl = `https://tabelog.com/rstLst/?vs=1&sa=${encodeURIComponent(areaLabel)}&sk=${encodeURIComponent(p.jpName)}&SrtT=rt&Srt=D`;
+          const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.jpName)}&query_place_id=&center=${p.pLat},${p.pLon}`;
+          return `
+            <div class="food-card">
+              <div class="food-title">
+                <span>${idx + 1}. ${p.name}</span>
+                <span class="ehon-badge" style="background:var(--mizu); font-size:11.5px;">📏 ${p.dist}m</span>
+              </div>
+              <div class="food-meta">
+                <span>${p.cat}</span>
+                ${p.hours ? ` ｜ 🕒 ${p.hours}` : ""}
+              </div>
+              <div class="food-actions">
+                <a href="${tabelogSearchUrl}" target="_blank" rel="noopener" class="tabelog-btn">🏆 查 Tabelog 評價 ↗</a>
+                <a href="${mapUrl}" target="_blank" rel="noopener" class="nav-map-btn">🧭 Google 導航</a>
+              </div>
+            </div>
+          `;
+        }).join("");
+      } catch (err) {
+        statusEl.textContent = `⚠️ 網路繁忙，可直接點右側開啟 Tabelog 高分榜`;
+        listEl.innerHTML = "";
+      }
+    }
+
+    document.getElementById("locate-food-btn").addEventListener("click", () => {
+      if (!navigator.geolocation) {
+        alert("你的手機瀏覽器不支援 GPS 定位功能");
+        return;
+      }
+      document.getElementById("food-status-text").textContent = "📡 正在取得你的 GPS 定位...";
+      navigator.geolocation.getCurrentPosition(
+        pos => fetchNearbyFood(pos.coords.latitude, pos.coords.longitude, "目前位置"),
+        () => alert("無法取得定位權限！請在手機「設定 > Safari/Chrome > 位置」開啟權限，或點選下方預設地點。")
+      );
+    });
+
+    document.querySelectorAll(".preset-food-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        fetchNearbyFood(Number(btn.dataset.lat), Number(btn.dataset.lon), btn.dataset.area);
+      });
+    });
+
+    /* ================= 雲端同步與行程 ================= */
     async function loadFromGoogleSheet() {
       if (!GOOGLE_SHEET_API_URL.startsWith("http")) {
         setCloudStatus("⚠️ 尚未填入雲端網址", "var(--yamabuki)");
@@ -788,6 +1068,7 @@
       saveToGoogleSheet();
     });
 
+    /* ================= 記帳 & 匯率功能 ================= */
     const rateInput = document.getElementById("global-rate-input");
     const rateText = document.getElementById("rate-updated-text");
     rateInput.value = expenseData.rate || 0.2150;
