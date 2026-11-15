@@ -364,7 +364,7 @@
       </article>
     </div>
 
-    <!-- 4. 附近美食 & Tabelog 推薦區塊 -->
+    <!-- 4. 附近美食 & Tabelog 推薦區塊 (預設透過 GPS 自動定位搜尋附近美食) -->
     <div id="sec-food-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">🍜 附近高分美食</h2>
@@ -372,17 +372,17 @@
       </div>
 
       <article class="ehon-card" style="background: #FFF9EC;">
-        <div style="font-size:14px; font-weight:700; margin-bottom:8px;">📍 依你的目前定位自動搜尋周邊 10+ 家餐廳/小吃</div>
+        <div style="font-size:14px; font-weight:700; margin-bottom:8px;">📍 透過 Google Map / GPS 定位自動搜尋周邊 10+ 家餐廳/小吃</div>
         <div style="display:flex; flex-wrap:wrap; gap:8px;">
-          <button type="button" class="btn-coral" id="locate-food-btn" style="flex:1; background: var(--yamabuki);">📡 用目前定位搜尋附近美食</button>
+          <button type="button" class="btn-coral" id="locate-food-btn" style="flex:1; background: var(--yamabuki);">📡 使用 GPS 定位搜尋附近美食</button>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
-          <button type="button" class="choice-pill preset-food-btn" data-lat="34.3955" data-lon="132.4536" data-area="廣島市中心">廣島站・本通周邊</button>
+          <button type="button" class="choice-pill preset-food-btn" data-lat="34.3955" data-lon="132.4536" data-area="廣島市中心">廣島站・本通</button>
           <button type="button" class="choice-pill preset-food-btn" data-lat="34.2961" data-lon="132.3198" data-area="宮島">宮島表參道</button>
           <button type="button" class="choice-pill preset-food-btn" data-lat="34.6687" data-lon="135.5013" data-area="道頓堀・心齋橋">道頓堀・心齋橋</button>
         </div>
         <div id="tabelog-area-banner" style="margin-top:10px; padding-top:10px; border-top:1.5px dashed #D8CFC0; display:flex; justify-content:space-between; align-items:center; gap:8px;">
-          <span id="food-status-text" style="font-size:12.5px; font-weight:700;">尚未定位，可點上方按鈕取得附近店家</span>
+          <span id="food-status-text" style="font-size:12.5px; font-weight:700;">點擊上方按鈕立即取得目前位置周邊美食</span>
           <a id="tabelog-top-ranking-link" href="https://tabelog.com/rstLst/?SrtT=rt&Srt=D" target="_blank" rel="noopener" class="tabelog-btn" style="flex-shrink:0;">🏆 Tabelog 高分榜 ↗</a>
         </div>
       </article>
@@ -616,7 +616,7 @@
   <script>
     const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyI4clVAxGhFyR4ar-IzHcJ4UaQsalZIM98AwkSdQE1VPfyGMMABoD39Jk42n91mjELTQ/exec";
 
-    // 1. 立即計算並顯示出發倒數（絕不等待網路）
+    // 1. 立即計算並顯示出發倒數
     (function updateCountdown() {
       const now = new Date();
       const target = new Date(now.getFullYear(), 2, 19, 7, 10, 0);
@@ -653,7 +653,7 @@
           { time: "10:00", title: "大鳥大社", note: "祈求勝運與旅途平安", transport: "電車", tType: "t-train", must: false, query: "大鳥大社" },
           { time: "13:00", title: "通天閣", note: "新世界通天閣", transport: "電車", tType: "t-train", must: false, query: "通天閣" }
           { time: "14:00", title: "四天王寺市集 / 通天閣", note: "市集挖寶", transport: "電車", tType: "t-train", must: false, query: "四天王寺" },
-          { time: "17:00", title: "大阪寶可夢中心DX", note: "大丸梅田店旗艦店超好逛", transport: "電車", tType: "t-train", must: false, query: "Pokemon Center Osaka" }
+          { time: "17:00", title: "大阪寶可夢中心DX", note: "旗艦店超好逛", transport: "電車", tType: "t-train", must: false, query: "Pokemon Center Osaka" }
           { time: "18:00", title: "大阪寶可夢中心", note: "大丸梅田店旗艦店超好逛", transport: "電車", tType: "t-train", must: false, query: "Pokemon Center Osaka" }
         ]
       },
@@ -702,7 +702,6 @@
       statusBadge.style.background = bg || "var(--wakatake)";
     }
 
-    // 帶超時保護的 fetch，避免手機行動網路卡死
     function fetchWithTimeout(url, options, timeoutMs) {
       const controller = new AbortController();
       const id = setTimeout(() => controller.abort(), timeoutMs || 5000);
@@ -724,7 +723,8 @@
           fetchWeatherForecast(34.3853, 132.4553, "廣島・宮島");
         }
         if (targetId === "sec-food-box" && !foodLoadedOnce) {
-          fetchNearbyFood(34.3955, 132.4536, "廣島市中心");
+          // 切換到美食分頁時，自動觸發一次 GPS 定位搜尋
+          triggerGpsFoodSearch();
         }
         window.scrollTo({ top: 120, behavior: "smooth" });
       });
@@ -805,7 +805,7 @@
       });
     });
 
-    /* ================= 附近美食 & Tabelog 連動功能 ================= */
+    /* ================= 附近美食 & Tabelog 連動功能 (透過 Google Map / GPS 定位搜尋) ================= */
     let foodLoadedOnce = false;
 
     function calcDistanceMeters(lat1, lon1, lat2, lon2) {
@@ -840,11 +840,11 @@
       const listEl = document.getElementById("food-list-container");
       const topLink = document.getElementById("tabelog-top-ranking-link");
 
-      statusEl.textContent = "⏳ 正在搜尋「" + areaLabel + "」周邊美食...";
-      listEl.innerHTML = '<div class="ehon-card" style="text-align:center;">📡 搜尋附近餐廳與小吃中...</div>';
+      statusEl.textContent = "⏳ 正在透過 GPS 搜尋「" + areaLabel + "」周邊美食...";
+      listEl.innerHTML = '<div class="ehon-card" style="text-align:center;">📡 正在連線地圖尋找附近 10+ 家餐廳與小吃...</div>';
       topLink.href = "https://tabelog.com/rstLst/?vs=1&sa=" + encodeURIComponent(areaLabel) + "&sk=&SrtT=rt&Srt=D";
 
-      const query = '[out:json][timeout:10];(node["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,' + lat + ',' + lon + ');way["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,' + lat + ',' + lon + '););out center 35;';
+      const query = '[out:json][timeout:10];(node["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,' + lat + ',' + lon + ');way["amenity"~"restaurant|cafe|fast_food|izakaya"](around:1000,' + lat + ',' + lon + '););out center 40;';
 
       try {
         const res = await fetchWithTimeout("https://overpass-api.de/api/interpreter", {
@@ -868,12 +868,12 @@
           .slice(0, 15);
 
         if (places.length === 0) {
-          statusEl.textContent = "⚠️ 「" + areaLabel + "」附近暫無資料，請點右側看 Tabelog 排行";
+          statusEl.textContent = "⚠️ 「" + areaLabel + "」周邊暫無資料，請點右側看 Tabelog 排行";
           listEl.innerHTML = "";
           return;
         }
 
-        statusEl.textContent = "✅ 已找到 " + places.length + " 家「" + areaLabel + "」附近美食";
+        statusEl.textContent = "✅ 已透過 GPS 為你找到 " + places.length + " 家「" + areaLabel + "」周邊高分美食";
         listEl.innerHTML = places.map((p, idx) => {
           const tabelogSearchUrl = "https://tabelog.com/rstLst/?vs=1&sa=" + encodeURIComponent(areaLabel) + "&sk=" + encodeURIComponent(p.jpName) + "&SrtT=rt&Srt=D";
           const mapUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.jpName) + "&center=" + p.pLat + "," + p.pLon;
@@ -892,17 +892,24 @@
       }
     }
 
-    document.getElementById("locate-food-btn").addEventListener("click", () => {
+    function triggerGpsFoodSearch() {
       if (!navigator.geolocation) {
-        alert("你的手機瀏覽器不支援 GPS 定位功能");
+        // 如果不支援 GPS，預設帶入廣島站座標
+        fetchNearbyFood(34.3955, 132.4536, "廣島站・本通");
         return;
       }
       document.getElementById("food-status-text").textContent = "📡 正在取得你的 GPS 定位...";
       navigator.geolocation.getCurrentPosition(
-        pos => fetchNearbyFood(pos.coords.latitude, pos.coords.longitude, "目前位置"),
-        () => alert("無法取得定位權限！請在手機「設定 > Safari/Chrome > 位置」開啟權限，或點選下方預設地點。")
+        pos => fetchNearbyFood(pos.coords.latitude, pos.coords.longitude, "目前 GPS 定位"),
+        () => {
+          // 若拒絕授權，預設帶入廣島站
+          document.getElementById("food-status-text").textContent = "⚠️ 無法取得定位，已自動切換為廣島站周邊";
+          fetchNearbyFood(34.3955, 132.4536, "廣島站・本通");
+        }
       );
-    });
+    }
+
+    document.getElementById("locate-food-btn").addEventListener("click", triggerGpsFoodSearch);
 
     document.querySelectorAll(".preset-food-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -1335,14 +1342,12 @@
       }
     }
 
-    // 2. 先秒開渲染所有本機資料，再非同步背景連線試算表
     renderDayTabs();
     renderTimeline();
     renderMembers();
     renderExpenses();
     setTimeout(loadFromGoogleSheet, 100);
 
-    // 出發前任務
     const DEFAULT_PRE = [
       { text: "護照（確認效期 6 個月以上）", done: false },
       { text: "填寫 Visit Japan Web", done: false },
@@ -1375,7 +1380,6 @@
     });
     saveAndRenderPre();
 
-    // 行李清單
     const DEFAULT_LUG = [
       { cat: "隨身重要", text: "護照、錢包、日幣", done: false },
       { cat: "隨身重要", text: "行動電源", done: false },
@@ -1416,7 +1420,6 @@
     });
     saveAndRenderLug();
 
-    // 日語字卡
     const PHRASES = [
       { jp: "助けてください", furi: "たすけてください", zh: "請幫幫我" },
       { jp: "救急車を呼んでください", furi: "きゅうきゅうしゃをよんでください", zh: "請叫救護車" },
