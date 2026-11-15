@@ -1063,9 +1063,11 @@
     const DEFAULT_PRE = [
       { text: "護照（確認效期 6 個月以上）", done: false },
       { text: "填寫 Visit Japan Web", done: false },
-      { text: "日本上網卡 / eSIM 開通設定", done: false },
+      { text: "日本上網eSIM 開通設定", done: false },
       { text: "日幣現鈔與海外信用卡", done: false },
       { text: "電子機票與飯店確認信存入手機", done: false }
+      { text: "機場接送 去程", done: false }
+      { text: "機場接送 返程", done: false }
     ];
     let preItems = JSON.parse(localStorage.getItem("hiroshima_pre_v4")) || DEFAULT_PRE;
     function saveAndRenderPre() {
