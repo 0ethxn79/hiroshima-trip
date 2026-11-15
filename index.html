@@ -350,10 +350,10 @@
         </div>
 
         <div style="margin-bottom:12px;">
-          <div style="font-size:13px; font-weight:700; margin-bottom:4px;">👥 旅伴名單（分帳用）：</div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:4px;">👥 旅伴名單（請輸入各自名字，避免共用搞混）：</div>
           <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;" id="members-list-wrap"></div>
           <div class="add-row" style="margin-top:6px;">
-            <input type="text" id="new-member-input" class="add-input" placeholder="新增旅伴名字" style="padding:5px 10px; font-size:13px;" />
+            <input type="text" id="new-member-input" class="add-input" placeholder="輸入名字（如：小宸、翔）" style="padding:5px 10px; font-size:13px;" />
             <button type="button" class="add-btn" id="add-member-btn" style="padding:5px 12px; font-size:13px;">＋ 旅伴</button>
           </div>
         </div>
@@ -596,9 +596,14 @@
     let tripDays = JSON.parse(localStorage.getItem("hiroshima_trip_days_v4")) || DEFAULT_TRIP_DAYS;
     let expenseData = JSON.parse(localStorage.getItem("hiroshima_expenses_v1")) || {
       rate: 0.2150,
-      members: ["我"],
+      members: [],
       items: []
     };
+
+    // 若舊紀錄只有預設的 ["我"] 且無消費紀錄，自動清空改為由使用者輸入各自名字
+    if (expenseData.members && expenseData.members.length === 1 && expenseData.members[0] === "我" && (!expenseData.items || expenseData.items.length === 0)) {
+      expenseData.members = [];
+    }
 
     let activeDayIdx = 0;
     let editingSpotIdx = null;
@@ -641,6 +646,10 @@
           tripDays = data.tripDays;
           if (data.expenseData) {
             expenseData = data.expenseData;
+            if (!expenseData.members) expenseData.members = [];
+            if (expenseData.members.length === 1 && expenseData.members[0] === "我" && (!expenseData.items || expenseData.items.length === 0)) {
+              expenseData.members = [];
+            }
             localStorage.setItem("hiroshima_expenses_v1", JSON.stringify(expenseData));
           }
           localStorage.setItem("hiroshima_trip_days_v4", JSON.stringify(tripDays));
@@ -649,6 +658,7 @@
         }
         renderDayTabs();
         renderTimeline();
+        renderMembers();
         renderExpenses();
         setCloudStatus("☁️ 已與試算表同步", "var(--wakatake)");
       } catch (err) {
@@ -834,16 +844,21 @@
 
     function renderMembers() {
       const wrap = document.getElementById("members-list-wrap");
+      if (!expenseData.members || expenseData.members.length === 0) {
+        wrap.innerHTML = `<span style="font-size:12.5px; opacity:0.65;">尚未新增旅伴，請在下方輸入每位旅伴的名字（例如：小宸、翔）</span>`;
+        return;
+      }
       wrap.innerHTML = expenseData.members.map((m, idx) => `
         <span class="ehon-badge" style="background:var(--bg-washi);">
           👤 ${m}
-          ${idx > 0 ? `<button type="button" data-midx="${idx}" class="del-member-btn" style="border:none;background:none;cursor:pointer;font-weight:700;margin-left:2px;">✕</button>` : ""}
+          <button type="button" data-midx="${idx}" class="del-member-btn" style="border:none;background:none;cursor:pointer;font-weight:700;margin-left:4px;">✕</button>
         </span>
       `).join("");
       wrap.querySelectorAll(".del-member-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           expenseData.members.splice(Number(btn.dataset.midx), 1);
           renderMembers();
+          renderExpenses();
           saveToGoogleSheet();
         });
       });
@@ -856,6 +871,7 @@
         expenseData.members.push(name);
         inp.value = "";
         renderMembers();
+        renderExpenses();
         saveToGoogleSheet();
       }
     });
@@ -863,8 +879,8 @@
     const expModal = document.getElementById("expense-modal");
     let selCurrency = "JPY";
     let selCategory = "餐飲";
-    let selPayer = "宸";
-    let selSplitMembers = ["宸"];
+    let selPayer = "";
+    let selSplitMembers = [];
 
     function updateExpPreview() {
       const amt = evalMathExpr(document.getElementById("exp-amount").value);
@@ -896,7 +912,7 @@
     function renderExpModalPeople() {
       const payerGroup = document.getElementById("exp-payer-group");
       const splitGroup = document.getElementById("exp-split-group");
-      if (!expenseData.members.includes(selPayer)) selPayer = expenseData.members[0];
+      if (!expenseData.members.includes(selPayer)) selPayer = expenseData.members[0] || "";
 
       payerGroup.innerHTML = expenseData.members.map(m => `
         <button type="button" class="choice-pill ${m === selPayer ? "active-coral" : ""}" data-p="${m}">${m}</button>
@@ -928,8 +944,14 @@
     }
 
     document.getElementById("open-expense-modal-btn").addEventListener("click", () => {
+      if (!expenseData.members || expenseData.members.length === 0) {
+        alert("請先在上方「旅伴名單」輸入至少一位旅伴名字（例如：小宸），再開始記帳喔！");
+        document.getElementById("new-member-input").focus();
+        return;
+      }
       document.getElementById("exp-amount").value = "";
       document.getElementById("exp-note").value = "";
+      selPayer = expenseData.members[0];
       selSplitMembers = [...expenseData.members];
       renderExpModalPeople();
       updateExpPreview();
