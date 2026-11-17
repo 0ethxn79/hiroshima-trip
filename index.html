@@ -230,6 +230,17 @@
     .sos-desc { font-size: 14px; margin: 4px 0 10px; }
     .call-pill { display: inline-flex; align-items: center; justify-content: center; gap: 5px; background: var(--white); color: var(--ink); text-decoration: none; border: 2px solid var(--ink); border-radius: 12px; padding: 5px 14px; font-size: 13.5px; font-weight: 700; }
 
+    /* 找我附近的九宮格 */
+    .nearby-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+    .nearby-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--bg-washi); border: 2.5px solid var(--ink); border-radius: 14px;
+      padding: 8px 4px; text-decoration: none; color: var(--ink); font-size: 11.5px; font-weight: 700;
+      box-shadow: 0 2.5px 0 var(--ink); transition: transform 0.1s;
+    }
+    .nearby-btn:active { transform: translateY(2px); box-shadow: none; }
+    .nearby-icon { font-size: 20px; margin-bottom: 3px; }
+
     .phrase-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .phrase-jp { font-size: 19px; font-weight: 700; margin: 0 0 2px; }
     .phrase-furi { font-size: 12.5px; opacity: 0.75; margin: 0 0 4px; }
@@ -364,7 +375,7 @@
       </article>
     </div>
 
-    <!-- 4. 附近美食 & Tabelog 推薦區塊 (預設透過 GPS 自動定位搜尋附近美食) -->
+    <!-- 4. 附近美食 & Tabelog 推薦區塊 -->
     <div id="sec-food-box" class="tab-section">
       <div class="section-header">
         <h2 class="section-title">🍜 附近高分美食</h2>
@@ -425,6 +436,25 @@
             <div class="sum-label">🇹🇼 折合台幣約</div>
             <div class="sum-val" id="total-twd-display">NT$ 0</div>
           </div>
+        </div>
+
+        <!-- 交通票券回本計算機 -->
+        <div class="rate-box" style="background: #F4FBF0;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:13.5px; font-weight:700;">🎟️ 交通票券回本計算機</span>
+            <button type="button" class="action-btn del" id="pass-reset-btn" style="font-size:11.5px;">歸零</button>
+          </div>
+          <div class="rate-row" style="margin-top:8px;">
+            <span style="font-size:12.5px; font-weight:700; white-space:nowrap;">票券成本 ¥</span>
+            <input type="number" id="pass-cost-input" class="rate-input" value="17000" style="font-size:14px; padding:4px 8px;" />
+            <span style="font-size:12.5px; font-weight:700; white-space:nowrap;">已搭 ¥</span>
+            <span id="pass-used-display" style="font-size:15px; font-weight:700; color:#2B7A78;">0</span>
+          </div>
+          <div class="add-row" style="margin-top:8px;">
+            <input type="number" id="pass-ride-input" class="add-input" placeholder="輸入單程原價車資 (日圓)" style="padding:5px 10px; font-size:13px;" />
+            <button type="button" class="add-btn" id="pass-add-btn" style="padding:5px 12px; font-size:13px; background:var(--wakatake);">＋ 累加車資</button>
+          </div>
+          <div id="pass-status-text" style="font-size:12.5px; font-weight:700; margin-top:8px; color:#3E3A39;">還差 ¥ 17,000 回本，繼續搭車吧！</div>
         </div>
 
         <div style="margin-bottom:12px;">
@@ -522,6 +552,36 @@
         <div class="sos-card"><div class="sos-num">110</div><div class="sos-desc">日本警察局</div><a href="tel:110" class="call-pill">📞 撥打</a></div>
         <div class="sos-card"><div class="sos-num">119</div><div class="sos-desc">火警・救護車</div><a href="tel:119" class="call-pill">📞 撥打</a></div>
       </div>
+
+      <!-- 找我附近的 (九宮格快速搜尋) -->
+      <article class="ehon-card">
+        <div style="font-size:15px; font-weight:700; margin-bottom:4px;">📍 找我附近的（一鍵開啟地圖）</div>
+        <div style="font-size:12px; opacity:0.75;">直接搜尋你目前位置周邊的店家與設施</div>
+        <div class="nearby-grid">
+          <a href="https://www.google.com/maps/search/?api=1&query=ラーメン" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍜</span>拉麵</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=レストラン" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍴</span>餐廳</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=カフェ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">☕</span>咖啡廳</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=スイーツ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍰</span>甜點</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=コンビニ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🏪</span>便利商店</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=ドラッグストア" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">💊</span>藥妝店</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=コインロッカー" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🧳</span>置物櫃</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=トイレ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🚻</span>廁所</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=駐車場" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🅿️</span>停車場</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=駅" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🚉</span>最近車站</a>
+        </div>
+      </article>
+
+      <!-- 當地輸入地址自動取得交通建議 & 最新時刻表 -->
+      <article class="ehon-card" style="background: #F3F9FC;">
+        <div style="font-size:15px; font-weight:700; margin-bottom:6px;">🚃 當地即時交通建議＆時刻表</div>
+        <div style="font-size:12px; opacity:0.8; margin-bottom:8px;">自動以「目前位置」為起點，查詢電車/巴士最新班次</div>
+        <select id="transit-preset-select" class="modal-input" style="margin-bottom:8px; font-size:13px;">
+          <option value="">-- 或直接選擇今日行程景點 --</option>
+        </select>
+        <input type="text" id="transit-dest-input" class="modal-input" placeholder="輸入日本地址、車站或景點名稱" style="margin-bottom:8px;" />
+        <button type="button" class="btn-coral" id="get-transit-btn" style="width:100%; background: var(--mizu);">🧭 查詢最新電車 / 巴士時刻路線 ↗</button>
+      </article>
+
       <div id="phrases-container"></div>
     </div>
   </main>
@@ -680,7 +740,7 @@
       }
     ];
 
-    let tripDays = JSON.parse(localStorage.getItem("hiroshima_trip_days_v4")) || DEFAULT_TRIP_DAYS;
+    let tripDays = JSON.parse(localStorage.getItem("hiroshima_trip_days_v5")) || DEFAULT_TRIP_DAYS;
     let expenseData = JSON.parse(localStorage.getItem("hiroshima_expenses_v1")) || {
       rate: 0.2150,
       members: [],
@@ -722,8 +782,10 @@
           fetchWeatherForecast(34.3853, 132.4553, "廣島・宮島");
         }
         if (targetId === "sec-food-box" && !foodLoadedOnce) {
-          // 切換到美食分頁時，自動觸發一次 GPS 定位搜尋
           triggerGpsFoodSearch();
+        }
+        if (targetId === "sec-helper-box") {
+          updateTransitPresets();
         }
         window.scrollTo({ top: 120, behavior: "smooth" });
       });
@@ -804,7 +866,7 @@
       });
     });
 
-    /* ================= 附近美食 & Tabelog 連動功能 (透過 Google Map / GPS 定位搜尋) ================= */
+    /* ================= 附近美食 & Tabelog 連動功能 ================= */
     let foodLoadedOnce = false;
 
     function calcDistanceMeters(lat1, lon1, lat2, lon2) {
@@ -893,7 +955,6 @@
 
     function triggerGpsFoodSearch() {
       if (!navigator.geolocation) {
-        // 如果不支援 GPS，預設帶入廣島站座標
         fetchNearbyFood(34.3955, 132.4536, "廣島站・本通");
         return;
       }
@@ -901,7 +962,6 @@
       navigator.geolocation.getCurrentPosition(
         pos => fetchNearbyFood(pos.coords.latitude, pos.coords.longitude, "目前 GPS 定位"),
         () => {
-          // 若拒絕授權，預設帶入廣島站
           document.getElementById("food-status-text").textContent = "⚠️ 無法取得定位，已自動切換為廣島站周邊";
           fetchNearbyFood(34.3955, 132.4536, "廣島站・本通");
         }
@@ -928,7 +988,7 @@
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           tripDays = data;
-          localStorage.setItem("hiroshima_trip_days_v4", JSON.stringify(tripDays));
+          localStorage.setItem("hiroshima_trip_days_v5", JSON.stringify(tripDays));
         } else if (data && data.tripDays) {
           tripDays = data.tripDays;
           if (data.expenseData) {
@@ -939,12 +999,13 @@
             }
             localStorage.setItem("hiroshima_expenses_v1", JSON.stringify(expenseData));
           }
-          localStorage.setItem("hiroshima_trip_days_v4", JSON.stringify(tripDays));
+          localStorage.setItem("hiroshima_trip_days_v5", JSON.stringify(tripDays));
         }
         renderDayTabs();
         renderTimeline();
         renderMembers();
         renderExpenses();
+        updateTransitPresets();
         setCloudStatus("☁️ 已與試算表同步", "var(--wakatake)");
       } catch (err) {
         setCloudStatus("📱 本機離線模式", "var(--yamabuki)");
@@ -952,7 +1013,7 @@
     }
 
     async function saveToGoogleSheet() {
-      localStorage.setItem("hiroshima_trip_days_v4", JSON.stringify(tripDays));
+      localStorage.setItem("hiroshima_trip_days_v5", JSON.stringify(tripDays));
       localStorage.setItem("hiroshima_expenses_v1", JSON.stringify(expenseData));
       if (!GOOGLE_SHEET_API_URL.startsWith("http")) return;
       setCloudStatus("☁️ 儲存同步中...", "var(--yamabuki)");
@@ -981,6 +1042,7 @@
           activeDayIdx = Number(btn.dataset.idx);
           renderDayTabs();
           renderTimeline();
+          updateTransitPresets();
         });
       });
     }
@@ -999,6 +1061,8 @@
             '<div style="display:flex; align-items:center; gap:6px;">' +
               (item.must ? '<span class="must-go-badge">★ 必去</span>' : '') +
               '<div class="card-actions">' +
+                (idx > 0 ? '<button type="button" class="action-btn move-up-spot" data-sidx="' + idx + '">▲</button>' : '') +
+                (idx < current.items.length - 1 ? '<button type="button" class="action-btn move-down-spot" data-sidx="' + idx + '">▼</button>' : '') +
                 '<button type="button" class="action-btn edit-spot" data-sidx="' + idx + '">✏️</button>' +
                 '<button type="button" class="action-btn del del-spot" data-sidx="' + idx + '">🗑️</button>' +
               '</div>' +
@@ -1012,6 +1076,26 @@
         '</article>'
       ).join("");
 
+      timelineEl.querySelectorAll(".move-up-spot").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const i = Number(btn.dataset.sidx);
+          const arr = tripDays[activeDayIdx].items;
+          [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+          renderTimeline();
+          updateTransitPresets();
+          saveToGoogleSheet();
+        });
+      });
+      timelineEl.querySelectorAll(".move-down-spot").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const i = Number(btn.dataset.sidx);
+          const arr = tripDays[activeDayIdx].items;
+          [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
+          renderTimeline();
+          updateTransitPresets();
+          saveToGoogleSheet();
+        });
+      });
       timelineEl.querySelectorAll(".edit-spot").forEach(btn => {
         btn.addEventListener("click", () => openSpotModal(Number(btn.dataset.sidx)));
       });
@@ -1020,6 +1104,7 @@
           if (confirm("確定要刪除這個行程嗎？")) {
             tripDays[activeDayIdx].items.splice(Number(btn.dataset.sidx), 1);
             renderTimeline();
+            updateTransitPresets();
             saveToGoogleSheet();
           }
         });
@@ -1071,6 +1156,7 @@
         tripDays[activeDayIdx].items[editingSpotIdx] = newItem;
       }
       renderTimeline();
+      updateTransitPresets();
       spotModal.classList.remove("open");
       saveToGoogleSheet();
     });
@@ -1352,7 +1438,9 @@
       { text: "填寫 Visit Japan Web", done: false },
       { text: "日本上網卡 / eSIM 開通設定", done: false },
       { text: "日幣現鈔與海外信用卡", done: false },
-      { text: "電子機票與飯店確認信存入手機", done: false }
+      { text: "電子機票與飯店確認信存入手機", done: false },
+      { text: "機場接送 去程", done: false },
+      { text: "機場接送 返程", done: false }
     ];
     let preItems = JSON.parse(localStorage.getItem("hiroshima_pre_v4")) || DEFAULT_PRE;
     function saveAndRenderPre() {
@@ -1440,6 +1528,78 @@
       phraseModal.classList.add("open");
     }));
     document.getElementById("close-phrase-btn").addEventListener("click", () => phraseModal.classList.remove("open"));
+
+    /* ================= 交通票券回本計算機 ================= */
+    let passData = JSON.parse(localStorage.getItem("hiroshima_pass_v1")) || { cost: 17000, used: 0 };
+    const passCostInp = document.getElementById("pass-cost-input");
+    const passUsedDisp = document.getElementById("pass-used-display");
+    const passStatusTxt = document.getElementById("pass-status-text");
+
+    function updatePassUI() {
+      localStorage.setItem("hiroshima_pass_v1", JSON.stringify(passData));
+      passCostInp.value = passData.cost;
+      passUsedDisp.textContent = passData.used.toLocaleString();
+      const diff = passData.used - passData.cost;
+      if (diff >= 0) {
+        passStatusTxt.innerHTML = '🎉 恭喜已回本！淨賺 <span style="color:#D9534F;">¥ ' + diff.toLocaleString() + '</span>';
+      } else {
+        passStatusTxt.textContent = '還差 ¥ ' + Math.abs(diff).toLocaleString() + ' 回本，繼續搭車吧！';
+      }
+    }
+
+    passCostInp.addEventListener("change", () => {
+      passData.cost = Math.max(0, Number(passCostInp.value) || 0);
+      updatePassUI();
+    });
+
+    document.getElementById("pass-add-btn").addEventListener("click", () => {
+      const rideInp = document.getElementById("pass-ride-input");
+      const val = Number(rideInp.value);
+      if (val > 0) {
+        passData.used += val;
+        rideInp.value = "";
+        updatePassUI();
+      }
+    });
+
+    document.getElementById("pass-reset-btn").addEventListener("click", () => {
+      if (confirm("確定要將已累積車資歸零嗎？")) {
+        passData.used = 0;
+        updatePassUI();
+      }
+    });
+    updatePassUI();
+
+    /* ================= 當地即時交通建議 ================= */
+    function updateTransitPresets() {
+      const sel = document.getElementById("transit-preset-select");
+      if (!sel) return;
+      const items = (tripDays[activeDayIdx] && tripDays[activeDayIdx].items) || [];
+      sel.innerHTML = '<option value="">-- 或直接選擇 ' + tripDays[activeDayIdx].day + ' 行程景點 --</option>' +
+        items.map(it => '<option value="' + it.query + '">' + it.time + ' ' + it.title + '</option>').join("");
+    }
+    updateTransitPresets();
+
+    document.getElementById("transit-preset-select").addEventListener("change", (e) => {
+      if (e.target.value) document.getElementById("transit-dest-input").value = e.target.value;
+    });
+
+    document.getElementById("get-transit-btn").addEventListener("click", () => {
+      const dest = document.getElementById("transit-dest-input").value.trim();
+      if (!dest) { alert("請先輸入目的地地址或選擇景點喔！"); return; }
+      const openRoute = (originParam) => {
+        const url = "https://www.google.com/maps/dir/?api=1" + (originParam ? "&origin=" + originParam : "") + "&destination=" + encodeURIComponent(dest) + "&travelmode=transit";
+        window.open(url, "_blank", "noopener");
+      };
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => openRoute(pos.coords.latitude + "," + pos.coords.longitude),
+          () => openRoute("")
+        );
+      } else {
+        openRoute("");
+      }
+    });
   </script>
 </body>
 </html>
