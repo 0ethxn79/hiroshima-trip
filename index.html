@@ -470,25 +470,6 @@
           </div>
         </div>
 
-        <!-- 交通票券回本計算機 -->
-        <div class="rate-box" style="background: #F4FBF0;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:13.5px; font-weight:700;">🎟️ 交通票券回本計算機</span>
-            <button type="button" class="action-btn del" id="pass-reset-btn" style="font-size:11.5px;">歸零</button>
-          </div>
-          <div class="rate-row" style="margin-top:8px;">
-            <span style="font-size:12.5px; font-weight:700; white-space:nowrap;">票券成本 ¥</span>
-            <input type="number" id="pass-cost-input" class="rate-input" value="17000" style="font-size:14px; padding:4px 8px;" />
-            <span style="font-size:12.5px; font-weight:700; white-space:nowrap;">已搭 ¥</span>
-            <span id="pass-used-display" style="font-size:15px; font-weight:700; color:#2B7A78;">0</span>
-          </div>
-          <div class="add-row" style="margin-top:8px;">
-            <input type="number" id="pass-ride-input" class="add-input" placeholder="輸入單程原價車資 (日圓)" style="padding:5px 10px; font-size:13px;" />
-            <button type="button" class="add-btn" id="pass-add-btn" style="padding:5px 12px; font-size:13px; background:var(--wakatake);">＋ 累加車資</button>
-          </div>
-          <div id="pass-status-text" style="font-size:12.5px; font-weight:700; margin-top:8px; color:#3E3A39;">還差 ¥ 17,000 回本，繼續搭車吧！</div>
-        </div>
-
         <div style="margin-bottom:12px;">
           <div style="font-size:13px; font-weight:700; margin-bottom:4px;">👥 旅伴名單（請輸入各自名字，避免共用搞混）：</div>
           <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;" id="members-list-wrap"></div>
@@ -1586,43 +1567,6 @@
     }));
     document.getElementById("close-phrase-btn").addEventListener("click", () => phraseModal.classList.remove("open"));
 
-    /* ================= 交通票券回本計算機 ================= */
-    let passData = JSON.parse(localStorage.getItem("hiroshima_pass_v1")) || { cost: 17000, used: 0 };
-    const passCostInp = document.getElementById("pass-cost-input");
-    const passUsedDisp = document.getElementById("pass-used-display");
-    const passStatusTxt = document.getElementById("pass-status-text");
-
-    function updatePassUI() {
-      localStorage.setItem("hiroshima_pass_v1", JSON.stringify(passData));
-      passCostInp.value = passData.cost;
-      passUsedDisp.textContent = passData.used.toLocaleString();
-      const diff = passData.used - passData.cost;
-      if (diff >= 0) {
-        passStatusTxt.innerHTML = '🎉 恭喜已回本！淨賺 <span style="color:#D9534F;">¥ ' + diff.toLocaleString() + '</span>';
-      } else {
-        passStatusTxt.textContent = '還差 ¥ ' + Math.abs(diff).toLocaleString() + ' 回本，繼續搭車吧！';
-      }
-    }
-
-    passCostInp.addEventListener("change", () => {
-      passData.cost = Math.max(0, Number(passCostInp.value) || 0);
-      updatePassUI();
-    });
-
-    document.getElementById("pass-add-btn").addEventListener("click", () => {
-      const rideInp = document.getElementById("pass-ride-input");
-      const val = Number(rideInp.value);
-      if (val > 0) {
-        passData.used += val;
-        rideInp.value = "";
-        updatePassUI();
-      }
-    });
-
-    document.getElementById("pass-reset-btn").addEventListener("click", () => {
-      if (confirm("確定要將已累積車資歸零嗎？")) {
-        passData.used = 0;
-        updatePassUI();
       }
     });
     updatePassUI();
