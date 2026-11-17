@@ -412,6 +412,24 @@
         </div>
       </article>
 
+      <!-- 找我附近的 (九宮格快速搜尋) -->
+      <article class="ehon-card">
+        <div style="font-size:15px; font-weight:700; margin-bottom:4px;">📍 找我附近的（一鍵開啟地圖）</div>
+        <div style="font-size:12px; opacity:0.75;">直接搜尋你目前位置周邊的店家與設施</div>
+        <div class="nearby-grid">
+          <a href="https://www.google.com/maps/search/?api=1&query=ラーメン" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍜</span>拉麵</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=レストラン" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍴</span>餐廳</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=カフェ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">☕</span>咖啡廳</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=スイーツ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍰</span>甜點</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=コンビニ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🏪</span>便利商店</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=ドラッグストア" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">💊</span>藥妝店</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=コインロッカー" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🧳</span>置物櫃</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=トイレ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🚻</span>廁所</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=駐車場" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🅿️</span>停車場</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=駅" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🚉</span>最近車站</a>
+        </div>
+      </article>
+
       <div id="food-list-container"></div>
     </div>
 
@@ -566,35 +584,6 @@
         <div class="sos-card"><div class="sos-num">110</div><div class="sos-desc">日本警察局</div><a href="tel:110" class="call-pill">📞 撥打</a></div>
         <div class="sos-card"><div class="sos-num">119</div><div class="sos-desc">火警・救護車</div><a href="tel:119" class="call-pill">📞 撥打</a></div>
       </div>
-
-      <!-- 找我附近的 (九宮格快速搜尋) -->
-      <article class="ehon-card">
-        <div style="font-size:15px; font-weight:700; margin-bottom:4px;">📍 找我附近的（一鍵開啟地圖）</div>
-        <div style="font-size:12px; opacity:0.75;">直接搜尋你目前位置周邊的店家與設施</div>
-        <div class="nearby-grid">
-          <a href="https://www.google.com/maps/search/?api=1&query=ラーメン" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍜</span>拉麵</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=レストラン" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍴</span>餐廳</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=カフェ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">☕</span>咖啡廳</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=スイーツ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🍰</span>甜點</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=コンビニ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🏪</span>便利商店</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=ドラッグストア" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">💊</span>藥妝店</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=コインロッカー" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🧳</span>置物櫃</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=トイレ" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🚻</span>廁所</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=駐車場" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🅿️</span>停車場</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=駅" target="_blank" rel="noopener" class="nearby-btn"><span class="nearby-icon">🚉</span>最近車站</a>
-        </div>
-      </article>
-
-      <!-- 當地輸入地址自動取得交通建議 & 最新時刻表 -->
-      <article class="ehon-card" style="background: #F3F9FC;">
-        <div style="font-size:15px; font-weight:700; margin-bottom:6px;">🚃 當地即時交通建議＆時刻表</div>
-        <div style="font-size:12px; opacity:0.8; margin-bottom:8px;">自動以“目前位置”為起點，查詢電車/巴士最新班次</div>
-        <select id="transit-preset-select" class="modal-input" style="margin-bottom:8px; font-size:13px;">
-          <option value="">-- 或直接選擇今日行程景點 --</option>
-        </select>
-        <input type="text" id="transit-dest-input" class="modal-input" placeholder="輸入日本地址、車站或景點名稱" style="margin-bottom:8px;" />
-        <button type="button" class="btn-coral" id="get-transit-btn" style="width:100%; background: var(--mizu);">🧭 查詢最新電車 / 巴士時刻路線 ↗</button>
-      </article>
 
       <div id="phrases-container"></div>
     </div>
@@ -796,9 +785,6 @@
         }
         if (targetId === "sec-food-box" && !foodLoadedOnce) {
           triggerGpsFoodSearch();
-        }
-        if (targetId === "sec-helper-box") {
-          updateTransitPresets();
         }
         window.scrollTo({ top: 120, behavior: "smooth" });
       });
@@ -1018,7 +1004,6 @@
         renderTimeline();
         renderMembers();
         renderExpenses();
-        updateTransitPresets();
         setCloudStatus("☁️ 已與試算表同步", "var(--wakatake)");
       } catch (err) {
         setCloudStatus("📱 本機離線模式", "var(--yamabuki)");
@@ -1055,7 +1040,6 @@
           activeDayIdx = Number(btn.dataset.idx);
           renderDayTabs();
           renderTimeline();
-          updateTransitPresets();
         });
       });
     }
@@ -1159,7 +1143,6 @@
           const arr = tripDays[activeDayIdx].items;
           [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
           renderTimeline();
-          updateTransitPresets();
           saveToGoogleSheet();
         });
       });
@@ -1169,7 +1152,6 @@
           const arr = tripDays[activeDayIdx].items;
           [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
           renderTimeline();
-          updateTransitPresets();
           saveToGoogleSheet();
         });
       });
@@ -1181,7 +1163,6 @@
           if (confirm("確定要刪除這個行程嗎？")) {
             tripDays[activeDayIdx].items.splice(Number(btn.dataset.sidx), 1);
             renderTimeline();
-            updateTransitPresets();
             saveToGoogleSheet();
           }
         });
@@ -1235,7 +1216,6 @@
         tripDays[activeDayIdx].items[editingSpotIdx] = newItem;
       }
       renderTimeline();
-      updateTransitPresets();
       spotModal.classList.remove("open");
       saveToGoogleSheet();
     });
@@ -1646,37 +1626,6 @@
       }
     });
     updatePassUI();
-
-    /* ================= 當地即時交通建議 ================= */
-    function updateTransitPresets() {
-      const sel = document.getElementById("transit-preset-select");
-      if (!sel) return;
-      const items = (tripDays[activeDayIdx] && tripDays[activeDayIdx].items) || [];
-      sel.innerHTML = '<option value="">-- 或直接選擇 ' + tripDays[activeDayIdx].day + ' 行程景點 --</option>' +
-        items.map(it => '<option value="' + it.query + '">' + it.time + ' ' + it.title + '</option>').join("");
-    }
-    updateTransitPresets();
-
-    document.getElementById("transit-preset-select").addEventListener("change", (e) => {
-      if (e.target.value) document.getElementById("transit-dest-input").value = e.target.value;
-    });
-
-    document.getElementById("get-transit-btn").addEventListener("click", () => {
-      const dest = document.getElementById("transit-dest-input").value.trim();
-      if (!dest) { alert("請先輸入目的地地址或選擇景點喔！"); return; }
-      const openRoute = (originParam) => {
-        const url = "https://www.google.com/maps/dir/?api=1" + (originParam ? "&origin=" + originParam : "") + "&destination=" + encodeURIComponent(dest) + "&travelmode=transit";
-        window.open(url, "_blank", "noopener");
-      };
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          pos => openRoute(pos.coords.latitude + "," + pos.coords.longitude),
-          () => openRoute("")
-        );
-      } else {
-        openRoute("");
-      }
-    });
   </script>
 </body>
 </html>
