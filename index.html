@@ -80,7 +80,7 @@
 
     .countdown-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 8px; }
     .countdown-pill { background: var(--yamabuki); border: var(--border-w) solid var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 13.5px; font-weight: 700; box-shadow: 0 3px 0 var(--ink); }
-    .sync-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--ink); background: var(--wakatake); }
+    .sync-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--ink); background: var(--wakatake); white-space: nowrap; }
 
     .section-header { display: flex; align-items: center; justify-content: space-between; margin: 10px 0 12px; }
     .section-title { margin: 0; font-size: 21px; }
@@ -136,6 +136,20 @@
     .card-actions { display: flex; gap: 6px; margin-left: auto; }
     .action-btn { background: var(--bg-washi); border: 2px solid var(--ink); border-radius: 10px; padding: 3px 8px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
     .action-btn.del { background: #FFD8D8; }
+
+    /* 子行程 (備註/交通) 收闔區塊 */
+    .sub-items-box {
+      margin-top: 12px; padding-top: 10px; border-top: 2px dashed #D8CFC0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .sub-item-row {
+      background: var(--bg-washi); border: 2px solid var(--ink); border-radius: 14px;
+      padding: 8px 10px; font-size: 13px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
+    }
+    .sub-item-tag {
+      display: inline-block; background: var(--mizu); border: 1.5px solid var(--ink);
+      border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 700; margin-right: 4px;
+    }
 
     .tip-banner { background: var(--wakatake); border: var(--border-w) solid var(--ink); border-radius: 18px; padding: 12px 14px; font-size: 14px; font-weight: 700; margin: 14px 0 20px; display: flex; align-items: center; gap: 8px; }
 
@@ -326,9 +340,9 @@
     <div id="sec-schedule-box" class="tab-section active-section">
       <div class="section-header">
         <h2 class="section-title">📅 6 天的時間軸</h2>
-        <div style="display:flex; gap:6px;">
+        <div style="display:flex; gap:6px; align-items:center;">
           <button type="button" class="btn-coral" id="refresh-cloud-btn" style="font-size:12px; padding:4px 10px; background:var(--mizu);">🔄 同步雲端</button>
-          <span class="ehon-badge" id="day-area-badge" style="background: var(--wakatake);">廣島・宮島</span>
+          <span class="ehon-badge" id="day-area-badge" style="background: var(--wakatake); white-space: nowrap;">廣島・宮島</span>
         </div>
       </div>
 
@@ -574,7 +588,7 @@
       <!-- 當地輸入地址自動取得交通建議 & 最新時刻表 -->
       <article class="ehon-card" style="background: #F3F9FC;">
         <div style="font-size:15px; font-weight:700; margin-bottom:6px;">🚃 當地即時交通建議＆時刻表</div>
-        <div style="font-size:12px; opacity:0.8; margin-bottom:8px;">自動以「目前位置」為起點，查詢電車/巴士最新班次</div>
+        <div style="font-size:12px; opacity:0.8; margin-bottom:8px;">自動以“目前位置”為起點，查詢電車/巴士最新班次</div>
         <select id="transit-preset-select" class="modal-input" style="margin-bottom:8px; font-size:13px;">
           <option value="">-- 或直接選擇今日行程景點 --</option>
         </select>
@@ -689,58 +703,57 @@
       {
         day: "Day 1", date: "3/19 (五)", area: "廣島・宮島",
         items: [
-          { time: "10:30", title: "抵達廣島機場 ✈️", note: "搭乘利木津巴士前往廣島市區", transport: "巴士 ・ 約 45 分鐘", tType: "t-bus", must: false, query: "廣島機場" },
-          { time: "11:30", title: "搭 JR 山陽本線 往宮島口", note: "先去廣島站寄放行李", transport: "電車 ・ 約 27 分鐘", tType: "t-train", must: false, query: "宮島口站" },
-          { time: "12:00", title: "宮島車站吃午餐", note: "品嚐廣島燒或星鰻飯", transport: "步行 ・ 約 30 分鐘", tType: "t-walk", must: false, query: "宮島口棧橋" },
-          { time: "13:10", title: "嚴島神社 ⛩️", note: "欣賞絕美海上大鳥居與商店街散步", transport: "步行 ・ 約 10 分鐘", tType: "t-walk", must: true, query: "嚴島神社" },
-          { time: "18:00", title: "廣島寶可夢中心", note: "廣島限定紅色暴鯉龍周邊巡禮", transport: "電車 ・ 約 50 分鐘", tType: "t-train", must: true, query: "Pokemon Center Hiroshima" }
+          { time: "10:30", title: "抵達廣島機場 ✈️", note: "搭乘利木津巴士前往廣島市區", transport: "巴士 ・ 約 45 分鐘", tType: "t-bus", must: false, query: "廣島機場", subItems: [] },
+          { time: "11:30", title: "搭 JR 山陽本線 往宮島口", note: "先去廣島站寄放行李", transport: "電車 ・ 約 27 分鐘", tType: "t-train", must: false, query: "宮島口站", subItems: [] },
+          { time: "12:00", title: "宮島車站吃午餐", note: "品嚐廣島燒或星鰻飯", transport: "步行 ・ 約 30 分鐘", tType: "t-walk", must: false, query: "宮島口棧橋", subItems: [] },
+          { time: "13:10", title: "嚴島神社 ⛩️", note: "欣賞絕美海上大鳥居與商店街散步", transport: "步行 ・ 約 10 分鐘", tType: "t-walk", must: true, query: "嚴島神社", subItems: [] },
+          { time: "18:00", title: "廣島寶可夢中心", note: "廣島限定紅色暴鯉龍周邊巡禮", transport: "電車 ・ 約 50 分鐘", tType: "t-train", must: true, query: "Pokemon Center Hiroshima", subItems: [] }
         ]
       },
       {
         day: "Day 2", date: "3/20 (六)", area: "廣島 → 大阪",
         items: [
-          { time: "09:00", title: "原爆圓頂館", note: "世界文化遺產歷史地標", transport: "電車 ・ 約 20 分鐘", tType: "t-train", must: true, query: "原爆圓頂館" },
-          { time: "10:00", title: "廣島和平紀念公園", note: "沿河岸參觀和平資料館", transport: "步行 ・ 約 10 分鐘", tType: "t-walk", must: false, query: "廣島和平紀念公園" },
-          { time: "12:00", title: "姬路城", note: "欣賞日本第一名城白鷺城", transport: "電車 ・ 約 55 分鐘", tType: "t-train", must: false, query: "姬路城" },
-          { time: "16:00", title: "心齋橋 Check in", note: "入住大阪住1道頓堀2號店", transport: "電車 ・ 約 30 分鐘", tType: "t-train", must: false, query: "住1道頓堀2號店" },
-          { time: "22:00", title: "大阪歌舞秀", note: "體驗華麗舞台表演", transport: "步行", tType: "t-walk", must: false, query: "道頓堀" }
+          { time: "09:00", title: "原爆圓頂館", note: "世界文化遺產歷史地標", transport: "電車 ・ 約 20 分鐘", tType: "t-train", must: true, query: "原爆圓頂館", subItems: [] },
+          { time: "10:00", title: "廣島和平紀念公園", note: "沿河岸參觀和平資料館", transport: "步行 ・ 約 10 分鐘", tType: "t-walk", must: false, query: "廣島和平紀念公園", subItems: [] },
+          { time: "16:00", title: "心齋橋 Check in", note: "入住大阪住1道頓堀2號店", transport: "電車 ・ 約 30 分鐘", tType: "t-train", must: false, query: "住1道頓堀2號店", subItems: [] },
+          { time: "22:00", title: "大阪歌舞秀", note: "體驗華麗舞台表演", transport: "步行", tType: "t-walk", must: false, query: "道頓堀", subItems: [] }
         ]
       },
       {
         day: "Day 3", date: "3/21 (日)", area: "大阪市區巡禮",
         items: [
-          { time: "09:00", title: "露天神社 ⛩️", note: "梅田著名的戀愛結緣聖地", transport: "電車", tType: "t-train", must: false, query: "露天神社 大阪" },
-          { time: "10:00", title: "大鳥大社", note: "祈求勝運與旅途平安", transport: "電車", tType: "t-train", must: false, query: "大鳥大社" },
-          { time: "13:00", title: "通天閣", note: "新世界通天閣", transport: "電車", tType: "t-train", must: false, query: "通天閣" },
-          { time: "14:00", title: "四天王寺市集", note: "市集挖寶", transport: "電車", tType: "t-train", must: false, query: "四天王寺" },
-          { time: "17:00", title: "大阪寶可夢中心", note: "大丸梅田店旗艦店超好逛", transport: "電車", tType: "t-train", must: false, query: "Pokemon Center Osaka" }
+          { time: "09:00", title: "露天神社 ⛩️", note: "梅田著名的戀愛結緣聖地", transport: "電車", tType: "t-train", must: false, query: "露天神社 大阪", subItems: [] },
+          { time: "10:00", title: "大鳥大社", note: "祈求勝運與旅途平安", transport: "電車", tType: "t-train", must: false, query: "大鳥大社", subItems: [] },
+          { time: "13:00", title: "通天閣", note: "新世界通天閣", transport: "電車", tType: "t-train", must: false, query: "通天閣", subItems: [] },
+          { time: "14:00", title: "四天王寺市集", note: "市集挖寶", transport: "電車", tType: "t-train", must: false, query: "四天王寺", subItems: [] },
+          { time: "17:00", title: "大阪寶可夢中心", note: "大丸梅田店旗艦店超好逛", transport: "電車", tType: "t-train", must: false, query: "Pokemon Center Osaka", subItems: [] }
         ]
       },
       {
         day: "Day 4", date: "3/22 (一)", area: "海之京都",
         items: [
-          { time: "09:00", title: "天橋立", note: "日本三景之一，俯瞰飛龍觀", transport: "電車 / 巴士", tType: "t-bus", must: false, query: "天橋立" },
-          { time: "11:00", title: "伊根舟屋", note: "漫步傳統木造舟屋群", transport: "巴士", tType: "t-bus", must: false, query: "伊根舟屋" },
-          { time: "13:00", title: "伊根灣遊船", note: "海上近距離欣賞舟屋餵海鷗", transport: "遊覽船", tType: "t-ship", must: false, query: "伊根灣賞景船" }
+          { time: "09:00", title: "天橋立", note: "日本三景之一，俯瞰飛龍觀", transport: "電車 / 巴士", tType: "t-bus", must: false, query: "天橋立", subItems: [] },
+          { time: "11:00", title: "伊根舟屋", note: "漫步傳統木造舟屋群", transport: "巴士", tType: "t-bus", must: false, query: "伊根舟屋", subItems: [] },
+          { time: "13:00", title: "伊根灣遊船", note: "海上近距離欣賞舟屋餵海鷗", transport: "遊覽船", tType: "t-ship", must: false, query: "伊根灣賞景船", subItems: [] }
         ]
       },
       {
         day: "Day 5", date: "3/23 (二)", area: "宇治・奈良",
         items: [
-          { time: "09:00", title: "宇治上神社", note: "日本現存最古老神社建築", transport: "電車", tType: "t-train", must: false, query: "宇治上神社" },
-          { time: "11:00", title: "平等院", note: "鳳凰堂與品嚐宇治抹茶", transport: "步行", tType: "t-walk", must: false, query: "平等院" },
-          { time: "14:00", title: "奈良公園", note: "與可愛小鹿互動散步", transport: "電車", tType: "t-train", must: false, query: "奈良公園" }
+          { time: "09:00", title: "宇治上神社", note: "日本現存最古老神社建築", transport: "電車", tType: "t-train", must: false, query: "宇治上神社", subItems: [] },
+          { time: "11:00", title: "平等院", note: "鳳凰堂與品嚐宇治抹茶", transport: "步行", tType: "t-walk", must: false, query: "平等院", subItems: [] },
+          { time: "14:00", title: "奈良公園", note: "與可愛小鹿互動散步", transport: "電車", tType: "t-train", must: false, query: "奈良公園", subItems: [] }
         ]
       },
       {
         day: "Day 6", date: "3/24 (三)", area: "大阪 → 桃園",
         items: [
-          { time: "上午", title: "自由活動 & 最後採買", note: "心齋橋或臨空城 Outlet 補貨，前往機場搭機", transport: "電車", tType: "t-train", must: false, query: "關西國際機場" }
+          { time: "上午", title: "自由活動 & 最後採買", note: "心齋橋或臨空城 Outlet 補貨，前往機場搭機", transport: "電車", tType: "t-train", must: false, query: "關西國際機場", subItems: [] }
         ]
       }
     ];
 
-    let tripDays = JSON.parse(localStorage.getItem("hiroshima_trip_days_v5")) || DEFAULT_TRIP_DAYS;
+    let tripDays = JSON.parse(localStorage.getItem("hiroshima_trip_days_v6")) || DEFAULT_TRIP_DAYS;
     let expenseData = JSON.parse(localStorage.getItem("hiroshima_expenses_v1")) || {
       rate: 0.2150,
       members: [],
@@ -988,7 +1001,7 @@
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           tripDays = data;
-          localStorage.setItem("hiroshima_trip_days_v5", JSON.stringify(tripDays));
+          localStorage.setItem("hiroshima_trip_days_v6", JSON.stringify(tripDays));
         } else if (data && data.tripDays) {
           tripDays = data.tripDays;
           if (data.expenseData) {
@@ -999,7 +1012,7 @@
             }
             localStorage.setItem("hiroshima_expenses_v1", JSON.stringify(expenseData));
           }
-          localStorage.setItem("hiroshima_trip_days_v5", JSON.stringify(tripDays));
+          localStorage.setItem("hiroshima_trip_days_v6", JSON.stringify(tripDays));
         }
         renderDayTabs();
         renderTimeline();
@@ -1013,7 +1026,7 @@
     }
 
     async function saveToGoogleSheet() {
-      localStorage.setItem("hiroshima_trip_days_v5", JSON.stringify(tripDays));
+      localStorage.setItem("hiroshima_trip_days_v6", JSON.stringify(tripDays));
       localStorage.setItem("hiroshima_expenses_v1", JSON.stringify(expenseData));
       if (!GOOGLE_SHEET_API_URL.startsWith("http")) return;
       setCloudStatus("☁️ 儲存同步中...", "var(--yamabuki)");
@@ -1047,11 +1060,36 @@
       });
     }
 
+    let expandedSpots = {};
+
     function renderTimeline() {
       const current = tripDays[activeDayIdx];
       areaBadgeEl.textContent = current.area;
-      timelineEl.innerHTML = current.items.map((item, idx) =>
-        '<article class="ehon-card timeline-item">' +
+      timelineEl.innerHTML = current.items.map((item, idx) => {
+        if (!Array.isArray(item.subItems)) item.subItems = [];
+        const key = activeDayIdx + "-" + idx;
+        const isOpen = !!expandedSpots[key];
+        const subCount = item.subItems.length;
+
+        const subHtml = isOpen ? (
+          '<div class="sub-items-box">' +
+            (subCount === 0
+              ? '<div style="font-size:12px; opacity:0.65; text-align:center;">尚無子行程細節，點擊下方新增備註或轉乘交通</div>'
+              : item.subItems.map((sub, subIdx) =>
+                  '<div class="sub-item-row">' +
+                    '<div>' +
+                      (sub.tag ? '<span class="sub-item-tag">' + sub.tag + '</span>' : '') +
+                      '<span>' + sub.text + '</span>' +
+                    '</div>' +
+                    '<button type="button" class="del-btn del-sub-btn" data-sidx="' + idx + '" data-subidx="' + subIdx + '" style="padding:0 4px;">✕</button>' +
+                  '</div>'
+                ).join("")
+            ) +
+            '<button type="button" class="action-btn add-sub-btn" data-sidx="' + idx + '" style="background:var(--wakatake); align-self:flex-start;">＋ 新增子行程 / 交通備註</button>' +
+          '</div>'
+        ) : '';
+
+        return '<article class="ehon-card timeline-item">' +
           '<span class="timeline-dot"></span>' +
           '<div class="spot-header">' +
             '<div>' +
@@ -1072,9 +1110,48 @@
           '<div class="spot-tags">' +
             '<span class="transport-tag ' + item.tType + '">' + item.transport + '</span>' +
             '<a class="nav-map-btn" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.query) + '" target="_blank" rel="noopener">🧭 導航</a>' +
+            '<button type="button" class="action-btn toggle-sub-btn" data-sidx="' + idx + '" style="background:' + (isOpen ? 'var(--yamabuki)' : 'var(--bg-washi)') + ';">' +
+              (isOpen ? '🔼 收闔細節' : '🔽 細節 (' + subCount + ')') +
+            '</button>' +
           '</div>' +
-        '</article>'
-      ).join("");
+          subHtml +
+        '</article>';
+      }).join("");
+
+      timelineEl.querySelectorAll(".toggle-sub-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const key = activeDayIdx + "-" + btn.dataset.sidx;
+          expandedSpots[key] = !expandedSpots[key];
+          renderTimeline();
+        });
+      });
+
+      timelineEl.querySelectorAll(".add-sub-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const sidx = Number(btn.dataset.sidx);
+          const tag = prompt("請輸入分類標籤（例如：交通、轉乘、備註、必吃，可留空）：", "交通");
+          if (tag === null) return;
+          const text = prompt("請輸入子行程內容（例如：搭 JR 山陽本線 2 號月台、車資 ¥420）：");
+          if (!text || !text.trim()) return;
+          if (!Array.isArray(tripDays[activeDayIdx].items[sidx].subItems)) {
+            tripDays[activeDayIdx].items[sidx].subItems = [];
+          }
+          tripDays[activeDayIdx].items[sidx].subItems.push({ tag: tag.trim(), text: text.trim() });
+          expandedSpots[activeDayIdx + "-" + sidx] = true;
+          renderTimeline();
+          saveToGoogleSheet();
+        });
+      });
+
+      timelineEl.querySelectorAll(".del-sub-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const sidx = Number(btn.dataset.sidx);
+          const subidx = Number(btn.dataset.subidx);
+          tripDays[activeDayIdx].items[sidx].subItems.splice(subidx, 1);
+          renderTimeline();
+          saveToGoogleSheet();
+        });
+      });
 
       timelineEl.querySelectorAll(".move-up-spot").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -1151,8 +1228,10 @@
         query: document.getElementById("m-query").value.trim() || document.getElementById("m-title").value.trim()
       };
       if (editingSpotIdx === null) {
+        newItem.subItems = [];
         tripDays[activeDayIdx].items.push(newItem);
       } else {
+        newItem.subItems = tripDays[activeDayIdx].items[editingSpotIdx].subItems || [];
         tripDays[activeDayIdx].items[editingSpotIdx] = newItem;
       }
       renderTimeline();
@@ -1438,9 +1517,7 @@
       { text: "填寫 Visit Japan Web", done: false },
       { text: "日本上網卡 / eSIM 開通設定", done: false },
       { text: "日幣現鈔與海外信用卡", done: false },
-      { text: "電子機票與飯店確認信存入手機", done: false },
-      { text: "機場接送 去程", done: false },
-      { text: "機場接送 返程", done: false }
+      { text: "電子機票與飯店確認信存入手機", done: false }
     ];
     let preItems = JSON.parse(localStorage.getItem("hiroshima_pre_v4")) || DEFAULT_PRE;
     function saveAndRenderPre() {
