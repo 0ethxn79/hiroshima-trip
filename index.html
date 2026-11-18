@@ -69,17 +69,13 @@
       background: var(--white); border: var(--border-w) solid var(--ink);
       border-radius: 24px; box-shadow: 0 var(--shadow-offset) 0 var(--ink);
       padding: 16px; margin-bottom: 18px; position: relative;
-      cursor: grab; user-select: none; -webkit-user-select: none;
     }
-    .ehon-card:active { cursor: grabbing; }
-    .sortable-ghost { opacity: 0.45; background: #FFF5D6; border-style: dashed; }
-
     .ehon-badge {
       display: inline-flex; align-items: center; gap: 5px; padding: 3px 12px;
       border: 2.5px solid var(--ink); border-radius: 999px; font-size: 13px; font-weight: 700; background: var(--yamabuki); color: var(--ink);
     }
 
-    .hero-card { padding: 0; overflow: hidden; background: var(--mizu); cursor: default; }
+    .hero-card { padding: 0; overflow: hidden; background: var(--mizu); }
     .hero-svg-wrap { width: 100%; background: #CBE7F5; border-bottom: var(--border-w) solid var(--ink); display: block; line-height: 0; }
     .hero-info { padding: 16px 18px 18px; background: var(--mizu); }
     .hero-title { margin: 0 0 4px; font-size: 26px; }
@@ -121,8 +117,11 @@
     .timeline-item:nth-child(4n) .timeline-dot { background: var(--wakatake); }
 
     .spot-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-    .drag-grip { opacity: 0.45; font-size: 15px; margin-right: 4px; user-select: none; }
-    .spot-time { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .spot-time { font-size: 14px; font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+    .drag-handle { cursor: grab; padding: 2px 7px; background: var(--yamabuki); border: 1.5px solid var(--ink); border-radius: 8px; font-size: 12px; font-weight: 700; user-select: none; box-shadow: 0 1.5px 0 var(--ink); }
+    .drag-handle:active { cursor: grabbing; }
+    .sortable-ghost { opacity: 0.45; background: #FFF5D6; border-style: dashed; }
+
     .spot-title { font-size: 18px; font-weight: 700; margin: 0 0 6px; }
     .must-go-badge { flex-shrink: 0; background: var(--coral); border: 2.5px solid var(--ink); border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; box-shadow: 0 2px 0 var(--ink); }
 
@@ -263,7 +262,7 @@
     .nearby-btn:active { transform: translateY(2px); box-shadow: none; }
     .nearby-icon { font-size: 20px; margin-bottom: 3px; }
 
-    .phrase-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: default; }
+    .phrase-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .phrase-jp { font-size: 19px; font-weight: 700; margin: 0 0 2px; }
     .phrase-furi { font-size: 12.5px; opacity: 0.75; margin: 0 0 4px; }
     .phrase-zh { font-size: 14.5px; font-weight: 700; margin: 0; }
@@ -323,7 +322,7 @@
         <h2 class="section-title">✈️ 飛行小日記</h2>
         <span class="ehon-badge" style="background: var(--mizu);">中華航空</span>
       </div>
-      <article class="ehon-card" style="cursor:default;">
+      <article class="ehon-card">
         <span class="ehon-badge">去程 ・ 3/19（五）</span>
         <div class="flight-route">
           <div><div class="airport-code">TPE</div><div class="airport-name">台北桃園</div><div class="flight-time">07:10 起飛</div></div>
@@ -333,7 +332,7 @@
         <div class="flight-footer"><span>航班編號：<strong>CI112</strong></span><span>飛行時間約 2 小時 15 分</span></div>
       </article>
 
-      <article class="ehon-card" style="cursor:default;">
+      <article class="ehon-card">
         <span class="ehon-badge" style="background: var(--coral);">回程 ・ 3/24（三）</span>
         <div class="flight-route">
           <div><div class="airport-code">KIX</div><div class="airport-name">大阪關西</div><div class="flight-time">19:00 起飛</div></div>
@@ -380,7 +379,7 @@
         <button type="button" class="choice-pill weather-loc-btn" id="weather-gps-btn" data-name="我的目前位置">📍 我的定位</button>
       </div>
 
-      <article class="ehon-card" style="cursor:default;">
+      <article class="ehon-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <span class="ehon-badge" style="background: var(--yamabuki);">📅 這週預報（Day 1 – 7）</span>
           <span style="font-size:12px; opacity:0.7;">氣溫 / 降雨機率</span>
@@ -388,7 +387,7 @@
         <div id="weather-this-week"><p style="text-align:center; opacity:0.6;">⏳ 正在抓取最新氣象資料...</p></div>
       </article>
 
-      <article class="ehon-card" style="margin-bottom:0; cursor:default;">
+      <article class="ehon-card" style="margin-bottom:0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <span class="ehon-badge" style="background: var(--wakatake);">🗓️ 下週預報（Day 8 – 14）</span>
           <span style="font-size:12px; opacity:0.7;">氣溫 / 降雨機率</span>
@@ -404,7 +403,7 @@
         <span class="ehon-badge" style="background: var(--coral);">Tabelog 連動</span>
       </div>
 
-      <article class="ehon-card" style="background: #FFF9EC; cursor:default;">
+      <article class="ehon-card" style="background: #FFF9EC;">
         <div style="font-size:14px; font-weight:700; margin-bottom:8px;">📍 透過 Google Map / GPS 定位自動搜尋周邊 10+ 家餐廳/小吃</div>
         <div style="display:flex; flex-wrap:wrap; gap:8px;">
           <button type="button" class="btn-coral" id="locate-food-btn" style="flex:1; background: var(--yamabuki);">📡 使用 GPS 定位搜尋附近美食</button>
@@ -421,7 +420,7 @@
       </article>
 
       <!-- 找我附近的 (九宮格快速搜尋) -->
-      <article class="ehon-card" style="cursor:default;">
+      <article class="ehon-card">
         <div style="font-size:15px; font-weight:700; margin-bottom:4px;">📍 找我附近的（一鍵開啟地圖）</div>
         <div style="font-size:12px; opacity:0.75;">直接搜尋你目前位置周邊的店家與設施</div>
         <div class="nearby-grid">
@@ -448,7 +447,7 @@
         <span class="ehon-badge" style="background: var(--wakatake);">雲端同步</span>
       </div>
 
-      <section class="ehon-card" style="margin-bottom:0; cursor:default;">
+      <section class="ehon-card" style="margin-bottom:0;">
         <div class="rate-box">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:13.5px; font-weight:700;">💱 匯率設定：1 日圓 ＝ 台幣</span>
@@ -507,7 +506,7 @@
         <h2 class="section-title">🏠 今晚住哪裡</h2>
         <span class="ehon-badge" style="background: var(--coral);">共 5 晚</span>
       </div>
-      <article class="ehon-card" style="cursor:default;">
+      <article class="ehon-card">
         <span class="ehon-badge">3/19 – 3/20 ・ 1 晚</span>
         <h3 style="margin: 10px 0 4px; font-size: 19px;">東橫INN廣島站前新幹線口1號</h3>
         <table class="hotel-table">
@@ -517,7 +516,7 @@
         <a class="btn-coral" href="https://www.google.com/maps/search/?api=1&query=東橫INN廣島站前新幹線口1號" target="_blank" rel="noopener">📍 開啟 Google 地圖 ↗</a>
       </article>
 
-      <article class="ehon-card" style="cursor:default;">
+      <article class="ehon-card">
         <span class="ehon-badge">3/20 – 3/24 ・ 4 晚</span>
         <h3 style="margin: 10px 0 4px; font-size: 19px;">住1道頓堀2號店</h3>
         <table class="hotel-table">
@@ -531,7 +530,7 @@
     <!-- 7. 出發前任務 -->
     <div id="sec-pre-box" class="tab-section">
       <div class="section-header"><h2 class="section-title">✅ 出發前的小任務</h2></div>
-      <section class="ehon-card" style="margin-bottom:0; cursor:default;">
+      <section class="ehon-card" style="margin-bottom:0;">
         <div class="progress-text"><span>準備進度</span><span id="pre-progress-label">已完成 0 / 0 項</span></div>
         <div class="progress-track"><div class="progress-fill" id="pre-progress-bar"></div></div>
         <ul class="check-list" id="pre-list"></ul>
@@ -545,7 +544,7 @@
     <!-- 8. 行李打包清單 -->
     <div id="sec-luggage-box" class="tab-section">
       <div class="section-header"><h2 class="section-title">🧳 行李打包清單</h2></div>
-      <section class="ehon-card" style="margin-bottom:0; cursor:default;">
+      <section class="ehon-card" style="margin-bottom:0;">
         <div class="progress-text"><span>行李打包進度</span><span id="lug-progress-label">已完成 0 / 0 項</span></div>
         <div class="progress-track"><div class="progress-fill" id="lug-progress-bar" style="background: var(--mizu);"></div></div>
         <div class="luggage-tabs" id="luggage-tabs">
@@ -1063,11 +1062,11 @@
           '</div>'
         ) : '';
 
-        return '<article class="ehon-card timeline-item" title="長按可上下拖曳調整順序">' +
+        return '<article class="ehon-card timeline-item">' +
           '<span class="timeline-dot"></span>' +
           '<div class="spot-header">' +
             '<div>' +
-              '<div class="spot-time"><span class="drag-grip">☰</span>' + item.time + '</div>' +
+              '<div class="spot-time"><span class="drag-handle" title="按住拖曳排序">⠿ 移</span> ' + item.time + '</div>' +
               '<h3 class="spot-title">' + item.title + '</h3>' +
             '</div>' +
             '<div style="display:flex; align-items:center; gap:6px;">' +
@@ -1158,18 +1157,15 @@
         });
       });
 
-      // 啟用整張卡片拖曳排序 (支援滑鼠與手機觸控)
+      // 啟用指定手把拖曳排序 (支援滑鼠與手機觸控)
       if (sortableInstance) {
         sortableInstance.destroy();
       }
       if (window.Sortable) {
         sortableInstance = Sortable.create(timelineEl, {
           animation: 150,
-          filter: '.action-btn, .nav-map-btn, .del-btn, input, button',
-          preventOnFilter: false,
+          handle: '.drag-handle',
           ghostClass: 'sortable-ghost',
-          delay: 150,
-          delayOnTouchOnly: true,
           onEnd: function (evt) {
             if (evt.oldIndex === evt.newIndex) return;
             const movedItem = tripDays[activeDayIdx].items.splice(evt.oldIndex, 1)[0];
