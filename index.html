@@ -595,7 +595,10 @@
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <span style="font-size:14px; font-weight:700;">📋 消費明細紀錄</span>
-          <button type="button" class="action-btn" id="toggle-exp-list-btn">收合 / 展開明細</button>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="action-btn" id="copy-settle-btn" style="background:var(--terracotta-soft); color:var(--terracotta);">📋 複製結算明細</button>
+            <button type="button" class="action-btn" id="toggle-exp-list-btn">收合 / 展開</button>
+          </div>
         </div>
 
         <div id="expense-list-container"></div>
@@ -1598,6 +1601,56 @@
     document.getElementById("toggle-exp-list-btn").addEventListener("click", () => {
       showExpenseList = !showExpenseList;
       renderExpenses();
+    });
+
+    // 一鍵複製結算明細功能
+    document.getElementById("copy-settle-btn").addEventListener("click", () => {
+      if (!expenseData.items || expenseData.items.length === 0) {
+        alert("目前還沒有任何記帳紀錄可以複製喔！");
+        return;
+      }
+      let totalJpy = 0;
+      let totalTwd = 0;
+      const paidMap = {};
+      const owedMap = {};
+      expenseData.members.forEach(m => { paidMap[m] = 0; owedMap[m] = 0; });
+
+      expenseData.items.forEach(item => {
+        totalJpy += item.jpy;
+        totalTwd += item.twd;
+        if (paidMap[item.payer] !== undefined) paidMap[item.payer] += item.twd;
+        const share = item.twd / (item.splitFor.length || 1);
+        item.splitFor.forEach(m => { if (owedMap[m] !== undefined) owedMap[m] += share; });
+      });
+
+      let text = "⛩️ 廣島・山陽旅遊記帳結算總覽\n";
+      text += "--------------------------------\n";
+      text += "🇯🇵 總花費：¥ " + totalJpy.toLocaleString() + " (約 NT$ " + totalTwd.toLocaleString() + ")\n\n";
+      text += "📊 旅伴分攤結算（台幣）：\n";
+      expenseData.members.forEach(m => {
+        const diff = Math.round(paidMap[m] - owedMap[m]);
+        if (diff > 0) {
+          text += `• ${m} 應收回 NT$ ${diff.toLocaleString()}\n`;
+        } else if (diff < 0) {
+          text += `• ${m} 應支付 NT$ ${Math.abs(diff).toLocaleString()}\n`;
+        } else {
+          text += `• ${m} 已結清 (NT$ 0)\n`;
+        }
+      });
+      text += "--------------------------------\n";
+      text += "詳細明細：\n";
+      expenseData.items.slice(0, 10).forEach(item => {
+        text += `[${item.date}] ${item.category} - ${item.note}: ¥${item.jpy.toLocaleString()} (付費: ${item.payer})\n`;
+      });
+      if (expenseData.items.length > 10) {
+        text += `(還有 ${expenseData.items.length - 10} 筆較早紀錄省略...)\n`;
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✅ 已成功複製結算明細到剪貼簿，直接貼到 LINE 群組即可對帳！");
+      }).catch(() => {
+        prompt("複製失敗，請手動複製以下文字：", text);
+      });
     });
 
     function renderExpenses() {
