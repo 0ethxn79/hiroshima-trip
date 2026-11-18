@@ -79,6 +79,17 @@
       padding: 20px;
       margin-bottom: 18px;
       position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    /* 拖曳時的互動樣式 */
+    .ehon-card.dragging {
+      opacity: 0.4;
+      border: 2px dashed var(--terracotta);
+    }
+    .ehon-card.drag-over {
+      background-color: var(--terracotta-soft);
+      transform: scale(1.02);
     }
 
     .ehon-badge {
@@ -163,7 +174,9 @@
       content: ""; position: absolute; left: 7px; top: 20px; bottom: 20px; width: 2px;
       background: var(--sand);
     }
-    .timeline-item { position: relative; margin-bottom: 16px; }
+    .timeline-item { position: relative; margin-bottom: 16px; cursor: grab; }
+    .timeline-item:active { cursor: grabbing; }
+    
     .timeline-dot {
       position: absolute; left: -24px; top: 22px; width: 14px; height: 14px; border-radius: 50%;
       border: 3px solid var(--card-white); background: var(--terracotta); z-index: 2;
@@ -173,8 +186,9 @@
     .timeline-item:nth-child(3n) .timeline-dot { background: var(--caramel); box-shadow: 0 0 0 2px var(--caramel-soft); }
 
     .spot-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .drag-handle { color: var(--ink-muted); font-size: 18px; margin-right: 6px; cursor: grab; user-select: none; vertical-align: middle; }
     .spot-time { font-size: 13px; font-weight: 700; color: var(--terracotta); margin-bottom: 2px; }
-    .spot-title { font-size: 17.5px; font-weight: 700; margin: 0 0 6px; color: var(--ink-dark); }
+    .spot-title { font-size: 17.5px; font-weight: 700; margin: 0 0 6px; color: var(--ink-dark); display: inline-block; }
     .must-go-badge {
       flex-shrink: 0; background: var(--terracotta-soft); color: var(--terracotta);
       border-radius: 999px; padding: 3px 10px; font-size: 11.5px; font-weight: 700;
@@ -442,6 +456,11 @@
       </div>
 
       <div class="day-tabs" id="day-tabs"></div>
+      
+      <div style="font-size: 12px; color: var(--ink-muted); margin-bottom: 8px; text-align: center;">
+        💡 提示：按住卡片左側的 ☰ 或任一處即可上下拖曳排序
+      </div>
+      
       <div class="timeline-wrap" id="timeline-container"></div>
 
       <div style="margin-top: 16px; text-align: center;">
@@ -1151,18 +1170,17 @@
           '</div>'
         ) : '';
 
-        return '<article class="ehon-card timeline-item">' +
+        return '<article class="ehon-card timeline-item" draggable="true" data-sidx="' + idx + '">' +
           '<span class="timeline-dot"></span>' +
           '<div class="spot-header">' +
             '<div>' +
-              '<div class="spot-time">' + item.time + '</div>' +
-              '<h3 class="spot-title">' + item.title + '</h3>' +
+              '<span class="drag-handle" title="按住拖曳排序">☰</span>' +
+              '<div class="spot-time" style="display:inline-block; margin-left:4px;">' + item.time + '</div>' +
+              '<div><h3 class="spot-title">' + item.title + '</h3></div>' +
             '</div>' +
             '<div style="display:flex; align-items:center; gap:6px;">' +
               (item.must ? '<span class="must-go-badge">★ 必去</span>' : '') +
               '<div class="card-actions">' +
-                (idx > 0 ? '<button type="button" class="action-btn move-up-spot" data-sidx="' + idx + '">▲</button>' : '') +
-                (idx < current.items.length - 1 ? '<button type="button" class="action-btn move-down-spot" data-sidx="' + idx + '">▼</button>' : '') +
                 '<button type="button" class="action-btn edit-spot" data-sidx="' + idx + '">✏️</button>' +
                 '<button type="button" class="action-btn del del-spot" data-sidx="' + idx + '">🗑️</button>' +
               '</div>' +
@@ -1179,6 +1197,88 @@
           subHtml +
         '</article>';
       }).join("");
+
+      // 綁定拖曳排序事件 (支援桌機與手機 Touch)
+      let draggedIndex = null;
+
+      timelineEl.querySelectorAll(".timeline-item").forEach(card => {
+        // --- 桌面端 HTML5 Drag and Drop ---
+        card.addEventListener("dragstart", (e) => {
+          draggedIndex = Number(card.dataset.sidx);
+          card.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+        });
+
+        card.addEventListener("dragend", () => {
+          card.classList.remove("dragging");
+          timelineEl.querySelectorAll(".timeline-item").forEach(c => c.classList.remove("drag-over"));
+        });
+
+        card.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          card.classList.add("drag-over");
+        });
+
+        card.addEventListener("dragleave", () => {
+          card.classList.remove("drag-over");
+        });
+
+        card.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const targetIndex = Number(card.dataset.sidx);
+          if (draggedIndex !== null && draggedIndex !== targetIndex) {
+            const items = tripDays[activeDayIdx].items;
+            const movedItem = items.splice(draggedIndex, 1)[0];
+            items.splice(targetIndex, 0, movedItem);
+            renderTimeline();
+            saveToGoogleSheet();
+          }
+        });
+
+        // --- 手機端 Touch 拖曳支援 ---
+        let touchStartY = 0;
+        let touchCard = null;
+
+        card.addEventListener("touchstart", (e) => {
+          // 如果點到按鈕、輸入框或細節就不觸發整張卡片拖曳，避免衝突
+          if (e.target.closest("button") || e.target.closest("a") || e.target.closest("input")) return;
+          touchCard = card;
+          draggedIndex = Number(card.dataset.sidx);
+          touchStartY = e.touches[0].clientY;
+          card.classList.add("dragging");
+        }, { passive: true });
+
+        card.addEventListener("touchmove", (e) => {
+          if (!touchCard) return;
+          const currentY = e.touches[0].clientY;
+          const diff = currentY - touchStartY;
+          
+          // 當上下滑動超過 45px 時，尋找當下手指底下的卡片進行即時排序預覽
+          if (Math.abs(diff) > 45) {
+            const targetElem = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+            const targetCard = targetElem ? targetElem.closest(".timeline-item") : null;
+            if (targetCard && targetCard !== touchCard) {
+              const targetIndex = Number(targetCard.dataset.sidx);
+              const items = tripDays[activeDayIdx].items;
+              const movedItem = items.splice(draggedIndex, 1)[0];
+              items.splice(targetIndex, 0, movedItem);
+              draggedIndex = targetIndex;
+              touchStartY = currentY; // 重置起點
+              renderTimeline();
+            }
+          }
+        }, { passive: true });
+
+        card.addEventListener("touchend", () => {
+          if (touchCard) {
+            touchCard.classList.remove("dragging");
+            touchCard = null;
+            renderTimeline();
+            saveToGoogleSheet();
+          }
+        });
+      });
 
       timelineEl.querySelectorAll(".toggle-sub-btn").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -1215,24 +1315,6 @@
         });
       });
 
-      timelineEl.querySelectorAll(".move-up-spot").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const i = Number(btn.dataset.sidx);
-          const arr = tripDays[activeDayIdx].items;
-          [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
-          renderTimeline();
-          saveToGoogleSheet();
-        });
-      });
-      timelineEl.querySelectorAll(".move-down-spot").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const i = Number(btn.dataset.sidx);
-          const arr = tripDays[activeDayIdx].items;
-          [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
-          renderTimeline();
-          saveToGoogleSheet();
-        });
-      });
       timelineEl.querySelectorAll(".edit-spot").forEach(btn => {
         btn.addEventListener("click", () => openSpotModal(Number(btn.dataset.sidx)));
       });
