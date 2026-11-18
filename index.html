@@ -1177,6 +1177,8 @@
             '<div style="display:flex; align-items:center; gap:6px;">' +
               (item.must ? '<span class="must-go-badge">★ 必去</span>' : '') +
               '<div class="card-actions">' +
+                (idx > 0 ? '<button type="button" class="action-btn move-up" data-sidx="' + idx + '" title="上移">▲</button>' : '') +
+                (idx < current.items.length - 1 ? '<button type="button" class="action-btn move-down" data-sidx="' + idx + '" title="下移">▼</button>' : '') +
                 '<button type="button" class="action-btn edit-spot" data-sidx="' + idx + '">✏️</button>' +
                 '<button type="button" class="action-btn del del-spot" data-sidx="' + idx + '">🗑️</button>' +
               '</div>' +
@@ -1237,7 +1239,6 @@
         let touchCard = null;
 
         card.addEventListener("touchstart", (e) => {
-          // 如果點到按鈕、輸入框或細節就不觸發整張卡片拖曳，避免衝突
           if (e.target.closest("button") || e.target.closest("a") || e.target.closest("input")) return;
           touchCard = card;
           draggedIndex = Number(card.dataset.sidx);
@@ -1250,7 +1251,6 @@
           const currentY = e.touches[0].clientY;
           const diff = currentY - touchStartY;
           
-          // 當上下滑動超過 45px 時，尋找當下手指底下的卡片進行即時排序預覽
           if (Math.abs(diff) > 45) {
             const targetElem = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
             const targetCard = targetElem ? targetElem.closest(".timeline-item") : null;
@@ -1260,7 +1260,7 @@
               const movedItem = items.splice(draggedIndex, 1)[0];
               items.splice(targetIndex, 0, movedItem);
               draggedIndex = targetIndex;
-              touchStartY = currentY; // 重置起點
+              touchStartY = currentY;
               renderTimeline();
             }
           }
@@ -1308,6 +1308,30 @@
           tripDays[activeDayIdx].items[sidx].subItems.splice(subidx, 1);
           renderTimeline();
           saveToGoogleSheet();
+        });
+      });
+
+      timelineEl.querySelectorAll(".move-up").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.dataset.sidx);
+          if (idx > 0) {
+            const items = tripDays[activeDayIdx].items;
+            [items[idx - 1], items[idx]] = [items[idx], items[idx - 1]];
+            renderTimeline();
+            saveToGoogleSheet();
+          }
+        });
+      });
+
+      timelineEl.querySelectorAll(".move-down").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.dataset.sidx);
+          const items = tripDays[activeDayIdx].items;
+          if (idx < items.length - 1) {
+            [items[idx + 1], items[idx]] = [items[idx], items[idx + 1]];
+            renderTimeline();
+            saveToGoogleSheet();
+          }
         });
       });
 
