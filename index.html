@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
   
+  <!-- 拖曳排序套件 SortableJS (支援滑鼠與手機觸控) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/SortableJS/1.15.0/Sortable.min.js"></script>
+
   <!-- APP 桌面專屬圖示 (宮島大鳥居繪本風) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23CBE7F5'/%3E%3Cpath d='M0 122 Q45 86 95 116 Q140 88 180 116 L180 135 L0 135 Z' fill='%23B9DAA5' stroke='%233E3A39' stroke-width='4'/%3E%3Crect x='0' y='128' width='180' height='52' fill='%23A8D3E6' stroke='%233E3A39' stroke-width='4'/%3E%3Cpath d='M22 146 Q36 140 50 146 T78 146 M108 156 Q122 150 136 156 T164 156' fill='none' stroke='%233E3A39' stroke-width='3.5' stroke-linecap='round'/%3E%3Crect x='52' y='64' width='14' height='84' rx='4' fill='%23F2A497' stroke='%233E3A39' stroke-width='4.5'/%3E%3Crect x='114' y='64' width='14' height='84' rx='4' fill='%23F2A497' stroke='%233E3A39' stroke-width='4.5'/%3E%3Crect x='34' y='80' width='112' height='12' rx='5' fill='%23F2A497' stroke='%233E3A39' stroke-width='4.5'/%3E%3Cpath d='M24 52 Q90 62 156 52 L150 67 Q90 74 30 67 Z' fill='%23F2A497' stroke='%233E3A39' stroke-width='4.5' stroke-linejoin='round'/%3E%3Crect x='82' y='65' width='16' height='19' rx='3' fill='%23F6D27A' stroke='%233E3A39' stroke-width='3.5'/%3E%3C/svg%3E" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23CBE7F5'/%3E%3Cpath d='M0 122 Q45 86 95 116 Q140 88 180 116 L180 135 L0 135 Z' fill='%23B9DAA5' stroke='%233E3A39' stroke-width='4'/%3E%3Crect x='0' y='128' width='180' height='52' fill='%23A8D3E6' stroke='%233E3A39' stroke-width='4'/%3E%3Cpath d='M22 146 Q36 140 50 146 T78 146 M108 156 Q122 150 136 156 T164 156' fill='none' stroke='%233E3A39' stroke-width='3.5' stroke-linecap='round'/%3E%3Crect x='52' y='64' width='14' height='84' rx='4' fill='%23F2A497' stroke='%233E3A39' stroke-width='4.5'/%3E%3Crect x='114' y='64' width='14' height='84' rx='4' fill='%23F2A497' stroke='%233E3A39' stroke-width='4.5'/%3E%3Crect x='34' y='80' width='112' height='12' rx='5' fill='%23F2A497' stroke='%233E3A39' stroke-width='4.5'/%3E%3Cpath d='M24 52 Q90 62 156 52 L150 67 Q90 74 30 67 Z' fill='%23F2A497' stroke='%233E3A39' stroke-width='4.5' stroke-linejoin='round'/%3E%3Crect x='82' y='65' width='16' height='19' rx='3' fill='%23F6D27A' stroke='%233E3A39' stroke-width='3.5'/%3E%3C/svg%3E" />
@@ -113,7 +116,10 @@
     .timeline-item:nth-child(3n) .timeline-dot { background: var(--mizu); }
     .timeline-item:nth-child(4n) .timeline-dot { background: var(--wakatake); }
 
-    .spot-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .spot-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; cursor: grab; }
+    .spot-header:active { cursor: grabbing; }
+    .drag-grip { opacity: 0.45; font-size: 15px; margin-right: 4px; user-select: none; }
+    .sortable-ghost { opacity: 0.45; background: #FFF5D6; border-style: dashed; }
     .spot-time { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
     .spot-title { font-size: 18px; font-weight: 700; margin: 0 0 6px; }
     .must-go-badge { flex-shrink: 0; background: var(--coral); border: 2.5px solid var(--ink); border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; box-shadow: 0 2px 0 var(--ink); }
@@ -1026,6 +1032,7 @@
     }
 
     let expandedSpots = {};
+    let sortableInstance = null;
 
     function renderTimeline() {
       const current = tripDays[activeDayIdx];
@@ -1056,9 +1063,9 @@
 
         return '<article class="ehon-card timeline-item">' +
           '<span class="timeline-dot"></span>' +
-          '<div class="spot-header">' +
+          '<div class="spot-header" title="按住可上下拖曳調整順序">' +
             '<div>' +
-              '<div class="spot-time">' + item.time + '</div>' +
+              '<div class="spot-time"><span class="drag-grip">☰</span>' + item.time + '</div>' +
               '<h3 class="spot-title">' + item.title + '</h3>' +
             '</div>' +
             '<div style="display:flex; align-items:center; gap:6px;">' +
@@ -1148,6 +1155,29 @@
           }
         });
       });
+
+      // 啟用拖曳排序 (支援滑鼠與手機觸控)
+      if (sortableInstance) {
+        sortableInstance.destroy();
+      }
+      if (window.Sortable) {
+        sortableInstance = Sortable.create(timelineEl, {
+          animation: 150,
+          handle: '.spot-header',
+          filter: '.action-btn',
+          preventOnFilter: false,
+          ghostClass: 'sortable-ghost',
+          delay: 120,
+          delayOnTouchOnly: true,
+          onEnd: function (evt) {
+            if (evt.oldIndex === evt.newIndex) return;
+            const movedItem = tripDays[activeDayIdx].items.splice(evt.oldIndex, 1)[0];
+            tripDays[activeDayIdx].items.splice(evt.newIndex, 0, movedItem);
+            renderTimeline();
+            saveToGoogleSheet();
+          }
+        });
+      }
     }
 
     const spotModal = document.getElementById("spot-modal");
@@ -1566,7 +1596,6 @@
       phraseModal.classList.add("open");
     }));
     document.getElementById("close-phrase-btn").addEventListener("click", () => phraseModal.classList.remove("open"));
-
   </script>
 </body>
 </html>
